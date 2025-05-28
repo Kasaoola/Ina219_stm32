@@ -1,0 +1,1100 @@
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"ina219.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/ina219.c"
+  18              		.section	.text.i2c_read,"ax",%progbits
+  19              		.align	1
+  20              		.global	i2c_read
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	i2c_read:
+  26              	.LVL0:
+  27              	.LFB78:
+   1:Core/Src/ina219.c **** #include "ina219.h"
+   2:Core/Src/ina219.c **** #include "stm32f1xx.h"
+   3:Core/Src/ina219.c **** #include "stm32f1xx_hal.h"
+   4:Core/Src/ina219.c **** #include <stdio.h>
+   5:Core/Src/ina219.c **** 
+   6:Core/Src/ina219.c **** // extern I2C_HandleTypeDef hi2c2;
+   7:Core/Src/ina219.c **** extern I2C_HandleTypeDef hi2c1;
+   8:Core/Src/ina219.c **** // INA219 macros
+   9:Core/Src/ina219.c **** // #define INA219_I2C_SLAVE_ADD 0x40
+  10:Core/Src/ina219.c **** #define INA219_REG_CONFIGURATION 0x00
+  11:Core/Src/ina219.c **** #define INA219_REG_SHUNT_VOLTAGE 0x01
+  12:Core/Src/ina219.c **** #define INA219_REG_BUS_VOLTAGE 0x02
+  13:Core/Src/ina219.c **** #define INA219_REG_POWER 0x03
+  14:Core/Src/ina219.c **** #define INA219_REG_CURRENT 0x04
+  15:Core/Src/ina219.c **** #define INA219_REG_CALIBRATION 0x05
+  16:Core/Src/ina219.c **** 
+  17:Core/Src/ina219.c **** #define INA219_CONFIG_MODE_POWERDOWN 0x0000
+  18:Core/Src/ina219.c **** #define INA219_CONFIG_MODE_SHUNT_AND_BUS_CONT 0x0007
+  19:Core/Src/ina219.c **** 
+  20:Core/Src/ina219.c **** uint16_t config_val = 0x399F; // Configuration value tracker.
+  21:Core/Src/ina219.c **** float current_lsb = 0.0; // Please calibrate for current/power measurements.
+  22:Core/Src/ina219.c **** 
+  23:Core/Src/ina219.c **** uint16_t i2c_read(INA219_t *sensor, uint8_t reg);
+  24:Core/Src/ina219.c **** bool i2c_write(INA219_t *sensor, uint8_t reg, uint16_t val);
+  25:Core/Src/ina219.c **** 
+  26:Core/Src/ina219.c **** bool ina219_init(INA219_t *sensor)
+  27:Core/Src/ina219.c **** {
+  28:Core/Src/ina219.c ****   if(ina219_reset(sensor))
+  29:Core/Src/ina219.c ****   {
+  30:Core/Src/ina219.c ****     return true;
+  31:Core/Src/ina219.c ****   }
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 2
+
+
+  32:Core/Src/ina219.c **** 
+  33:Core/Src/ina219.c ****   return false;
+  34:Core/Src/ina219.c **** }
+  35:Core/Src/ina219.c **** 
+  36:Core/Src/ina219.c **** void ina219_save_power(INA219_t *sensor)
+  37:Core/Src/ina219.c **** {
+  38:Core/Src/ina219.c ****   uint16_t config = i2c_read(sensor, INA219_REG_CONFIGURATION);
+  39:Core/Src/ina219.c **** 
+  40:Core/Src/ina219.c ****   if (sensor->power_on){
+  41:Core/Src/ina219.c ****     config = (config & 0xFFF8) | INA219_CONFIG_MODE_POWERDOWN;
+  42:Core/Src/ina219.c ****   }
+  43:Core/Src/ina219.c ****   else {
+  44:Core/Src/ina219.c ****     config = (config & 0xFFF8) | INA219_CONFIG_MODE_SHUNT_AND_BUS_CONT;
+  45:Core/Src/ina219.c ****   }
+  46:Core/Src/ina219.c ****   i2c_write (sensor, INA219_REG_CONFIGURATION, config);
+  47:Core/Src/ina219.c **** }
+  48:Core/Src/ina219.c **** 
+  49:Core/Src/ina219.c **** // Reset sensor to startup state.
+  50:Core/Src/ina219.c **** bool ina219_reset(INA219_t *sensor)
+  51:Core/Src/ina219.c **** {
+  52:Core/Src/ina219.c ****   if(i2c_write(sensor, INA219_REG_CONFIGURATION, 0x8000)){
+  53:Core/Src/ina219.c ****     printf("INA219 reset successful!\n");
+  54:Core/Src/ina219.c ****   }
+  55:Core/Src/ina219.c ****   else{
+  56:Core/Src/ina219.c ****     printf("INA219 reset failed!\n");
+  57:Core/Src/ina219.c ****   }
+  58:Core/Src/ina219.c **** 
+  59:Core/Src/ina219.c ****   if (i2c_read(sensor, INA219_REG_CONFIGURATION) == 0x399F)
+  60:Core/Src/ina219.c ****   {
+  61:Core/Src/ina219.c ****     sensor->config_val = 0x399F;
+  62:Core/Src/ina219.c ****     sensor->current_lsb = 0.0;
+  63:Core/Src/ina219.c ****     printf("INA219 reset successful!\n");
+  64:Core/Src/ina219.c ****     return true;
+  65:Core/Src/ina219.c ****   }
+  66:Core/Src/ina219.c ****   else{
+  67:Core/Src/ina219.c ****     printf("INA219 reset failed!\n");
+  68:Core/Src/ina219.c ****     return false;
+  69:Core/Src/ina219.c ****   }
+  70:Core/Src/ina219.c **** }
+  71:Core/Src/ina219.c **** 
+  72:Core/Src/ina219.c **** /**
+  73:Core/Src/ina219.c ****  * @brief Populates calibration register (0x05) for current and power measurements.
+  74:Core/Src/ina219.c ****  * @param max_current Maximum expected current, Amp.
+  75:Core/Src/ina219.c ****  * @param r_shunt Shunt resistance, Ohm.
+  76:Core/Src/ina219.c ****  * @cite Page 13, ina219.pdf.
+  77:Core/Src/ina219.c ****  */
+  78:Core/Src/ina219.c **** bool ina219_calibrate(INA219_t *sensor, const float max_current, const float r_shunt)
+  79:Core/Src/ina219.c **** {
+  80:Core/Src/ina219.c ****   float temp_current_lsb = max_current * 3.0517578125e-5;
+  81:Core/Src/ina219.c ****   const uint16_t calibration_val = (uint16_t)(0.04096 / (temp_current_lsb * r_shunt));
+  82:Core/Src/ina219.c ****   i2c_write(sensor, INA219_REG_CALIBRATION, calibration_val);
+  83:Core/Src/ina219.c **** 
+  84:Core/Src/ina219.c ****   // The least significant bit is always 0.
+  85:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CALIBRATION) == (calibration_val & 0xFFFE))
+  86:Core/Src/ina219.c ****   {
+  87:Core/Src/ina219.c ****     sensor->current_lsb = temp_current_lsb;
+  88:Core/Src/ina219.c ****     return true;
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 3
+
+
+  89:Core/Src/ina219.c ****   }
+  90:Core/Src/ina219.c **** 
+  91:Core/Src/ina219.c ****   return false;
+  92:Core/Src/ina219.c **** }
+  93:Core/Src/ina219.c **** 
+  94:Core/Src/ina219.c **** // See ina219_regcal.cpp to compute config_val.
+  95:Core/Src/ina219.c **** bool ina219_configure(INA219_t *sensor, const uint16_t val)
+  96:Core/Src/ina219.c **** {
+  97:Core/Src/ina219.c ****   i2c_write(sensor, INA219_REG_CONFIGURATION, val);
+  98:Core/Src/ina219.c **** 
+  99:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CONFIGURATION) == val)
+ 100:Core/Src/ina219.c ****   {
+ 101:Core/Src/ina219.c ****     sensor->config_val = val;
+ 102:Core/Src/ina219.c ****     return true;
+ 103:Core/Src/ina219.c ****   }
+ 104:Core/Src/ina219.c **** 
+ 105:Core/Src/ina219.c ****   return false;
+ 106:Core/Src/ina219.c **** }
+ 107:Core/Src/ina219.c **** 
+ 108:Core/Src/ina219.c **** // Voltage across in- and gnd, V.
+ 109:Core/Src/ina219.c **** float ina219_get_bus_voltage(INA219_t *sensor)
+ 110:Core/Src/ina219.c **** {
+ 111:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_BUS_VOLTAGE);
+ 112:Core/Src/ina219.c ****   const float bus_voltage_lsb = 4e-3; // 4mV
+ 113:Core/Src/ina219.c ****   return (reg_val >> 3) * bus_voltage_lsb;
+ 114:Core/Src/ina219.c **** }
+ 115:Core/Src/ina219.c **** 
+ 116:Core/Src/ina219.c **** // Current through the shunt resistor, mA.
+ 117:Core/Src/ina219.c **** float ina219_get_current(INA219_t *sensor)
+ 118:Core/Src/ina219.c **** {
+ 119:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_CURRENT);
+ 120:Core/Src/ina219.c ****   return reg_val * sensor->current_lsb;
+ 121:Core/Src/ina219.c **** }
+ 122:Core/Src/ina219.c **** 
+ 123:Core/Src/ina219.c **** // Voltage across shunt resistor, V.
+ 124:Core/Src/ina219.c **** float ina219_get_shunt_voltage(INA219_t *sensor)
+ 125:Core/Src/ina219.c **** {
+ 126:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_SHUNT_VOLTAGE);
+ 127:Core/Src/ina219.c ****   const float shunt_voltage_lsb = 1e-5; // 10uV
+ 128:Core/Src/ina219.c ****   return reg_val * shunt_voltage_lsb;
+ 129:Core/Src/ina219.c **** }
+ 130:Core/Src/ina219.c **** 
+ 131:Core/Src/ina219.c **** // Power consumed, Watts.
+ 132:Core/Src/ina219.c **** float ina219_get_power(INA219_t *sensor)
+ 133:Core/Src/ina219.c **** {
+ 134:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_POWER);
+ 135:Core/Src/ina219.c ****   return reg_val * 20 * sensor->current_lsb;
+ 136:Core/Src/ina219.c **** }
+ 137:Core/Src/ina219.c **** 
+ 138:Core/Src/ina219.c **** // I2C test by reading config register.
+ 139:Core/Src/ina219.c **** bool ina219_get_status(INA219_t *sensor)
+ 140:Core/Src/ina219.c **** {
+ 141:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CONFIGURATION) == sensor->config_val)
+ 142:Core/Src/ina219.c ****   {
+ 143:Core/Src/ina219.c ****     return true;
+ 144:Core/Src/ina219.c ****   }
+ 145:Core/Src/ina219.c ****   return false;
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 4
+
+
+ 146:Core/Src/ina219.c **** }
+ 147:Core/Src/ina219.c **** 
+ 148:Core/Src/ina219.c **** uint16_t i2c_read(INA219_t *sensor, uint8_t reg) {
+  28              		.loc 1 148 50 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 16
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 148 50 is_stmt 0 view .LVU1
+  33 0000 70B5     		push	{r4, r5, r6, lr}
+  34              		.cfi_def_cfa_offset 16
+  35              		.cfi_offset 4, -16
+  36              		.cfi_offset 5, -12
+  37              		.cfi_offset 6, -8
+  38              		.cfi_offset 14, -4
+  39 0002 86B0     		sub	sp, sp, #24
+  40              		.cfi_def_cfa_offset 40
+  41 0004 0446     		mov	r4, r0
+  42 0006 8DF80F10 		strb	r1, [sp, #15]
+ 149:Core/Src/ina219.c ****   uint8_t data[2] = {0};
+  43              		.loc 1 149 3 is_stmt 1 view .LVU2
+  44              		.loc 1 149 11 is_stmt 0 view .LVU3
+  45 000a 0023     		movs	r3, #0
+  46 000c ADF81430 		strh	r3, [sp, #20]	@ movhi
+ 150:Core/Src/ina219.c ****   // HAL_I2C_Master_Transmit(&hi2c2, sensor->address << 1, &reg, 1, HAL_MAX_DELAY);
+ 151:Core/Src/ina219.c ****   // HAL_I2C_Master_Receive(&hi2c2, sensor->address << 1, data, 2, HAL_MAX_DELAY);
+ 152:Core/Src/ina219.c ****   HAL_I2C_Master_Transmit(&hi2c1, sensor->address << 1, &reg, 1, HAL_MAX_DELAY);
+  47              		.loc 1 152 3 is_stmt 1 view .LVU4
+  48              		.loc 1 152 41 is_stmt 0 view .LVU5
+  49 0010 0178     		ldrb	r1, [r0]	@ zero_extendqisi2
+  50              	.LVL1:
+  51              		.loc 1 152 3 view .LVU6
+  52 0012 0D4D     		ldr	r5, .L3
+  53 0014 4FF0FF36 		mov	r6, #-1
+  54 0018 0096     		str	r6, [sp]
+  55 001a 0123     		movs	r3, #1
+  56 001c 0DF10F02 		add	r2, sp, #15
+  57              	.LVL2:
+  58              		.loc 1 152 3 view .LVU7
+  59 0020 9940     		lsls	r1, r1, r3
+  60 0022 2846     		mov	r0, r5
+  61              	.LVL3:
+  62              		.loc 1 152 3 view .LVU8
+  63 0024 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+  64              	.LVL4:
+ 153:Core/Src/ina219.c ****   HAL_I2C_Master_Receive(&hi2c1, sensor->address << 1, data, 2, HAL_MAX_DELAY);
+  65              		.loc 1 153 3 is_stmt 1 view .LVU9
+  66              		.loc 1 153 40 is_stmt 0 view .LVU10
+  67 0028 2178     		ldrb	r1, [r4]	@ zero_extendqisi2
+  68              		.loc 1 153 3 view .LVU11
+  69 002a 0096     		str	r6, [sp]
+  70 002c 0223     		movs	r3, #2
+  71 002e 05AA     		add	r2, sp, #20
+  72 0030 4900     		lsls	r1, r1, #1
+  73 0032 2846     		mov	r0, r5
+  74 0034 FFF7FEFF 		bl	HAL_I2C_Master_Receive
+  75              	.LVL5:
+ 154:Core/Src/ina219.c ****   return (data[0] << 8) | data[1];
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 5
+
+
+  76              		.loc 1 154 3 is_stmt 1 view .LVU12
+  77              		.loc 1 154 15 is_stmt 0 view .LVU13
+  78 0038 9DF81400 		ldrb	r0, [sp, #20]	@ zero_extendqisi2
+  79              		.loc 1 154 31 view .LVU14
+  80 003c 9DF81530 		ldrb	r3, [sp, #21]	@ zero_extendqisi2
+ 155:Core/Src/ina219.c **** }
+  81              		.loc 1 155 1 view .LVU15
+  82 0040 43EA0020 		orr	r0, r3, r0, lsl #8
+  83 0044 06B0     		add	sp, sp, #24
+  84              		.cfi_def_cfa_offset 16
+  85              		@ sp needed
+  86 0046 70BD     		pop	{r4, r5, r6, pc}
+  87              	.LVL6:
+  88              	.L4:
+  89              		.loc 1 155 1 view .LVU16
+  90              		.align	2
+  91              	.L3:
+  92 0048 00000000 		.word	hi2c1
+  93              		.cfi_endproc
+  94              	.LFE78:
+  96              		.section	.text.ina219_get_bus_voltage,"ax",%progbits
+  97              		.align	1
+  98              		.global	ina219_get_bus_voltage
+  99              		.syntax unified
+ 100              		.thumb
+ 101              		.thumb_func
+ 103              	ina219_get_bus_voltage:
+ 104              	.LVL7:
+ 105              	.LFB73:
+ 110:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_BUS_VOLTAGE);
+ 106              		.loc 1 110 1 is_stmt 1 view -0
+ 107              		.cfi_startproc
+ 108              		@ args = 0, pretend = 0, frame = 0
+ 109              		@ frame_needed = 0, uses_anonymous_args = 0
+ 110:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_BUS_VOLTAGE);
+ 110              		.loc 1 110 1 is_stmt 0 view .LVU18
+ 111 0000 08B5     		push	{r3, lr}
+ 112              		.cfi_def_cfa_offset 8
+ 113              		.cfi_offset 3, -8
+ 114              		.cfi_offset 14, -4
+ 111:Core/Src/ina219.c ****   const float bus_voltage_lsb = 4e-3; // 4mV
+ 115              		.loc 1 111 3 is_stmt 1 view .LVU19
+ 111:Core/Src/ina219.c ****   const float bus_voltage_lsb = 4e-3; // 4mV
+ 116              		.loc 1 111 22 is_stmt 0 view .LVU20
+ 117 0002 0221     		movs	r1, #2
+ 118 0004 FFF7FEFF 		bl	i2c_read
+ 119              	.LVL8:
+ 112:Core/Src/ina219.c ****   return (reg_val >> 3) * bus_voltage_lsb;
+ 120              		.loc 1 112 3 is_stmt 1 view .LVU21
+ 113:Core/Src/ina219.c **** }
+ 121              		.loc 1 113 3 view .LVU22
+ 113:Core/Src/ina219.c **** }
+ 122              		.loc 1 113 25 is_stmt 0 view .LVU23
+ 123 0008 C0F3CF00 		ubfx	r0, r0, #3, #16
+ 124              	.LVL9:
+ 113:Core/Src/ina219.c **** }
+ 125              		.loc 1 113 25 view .LVU24
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 6
+
+
+ 126 000c FFF7FEFF 		bl	__aeabi_i2f
+ 127              	.LVL10:
+ 128 0010 0149     		ldr	r1, .L7
+ 129 0012 FFF7FEFF 		bl	__aeabi_fmul
+ 130              	.LVL11:
+ 114:Core/Src/ina219.c **** 
+ 131              		.loc 1 114 1 view .LVU25
+ 132 0016 08BD     		pop	{r3, pc}
+ 133              	.L8:
+ 134              		.align	2
+ 135              	.L7:
+ 136 0018 6F12833B 		.word	998445679
+ 137              		.cfi_endproc
+ 138              	.LFE73:
+ 140              		.section	.text.ina219_get_current,"ax",%progbits
+ 141              		.align	1
+ 142              		.global	ina219_get_current
+ 143              		.syntax unified
+ 144              		.thumb
+ 145              		.thumb_func
+ 147              	ina219_get_current:
+ 148              	.LVL12:
+ 149              	.LFB74:
+ 118:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_CURRENT);
+ 150              		.loc 1 118 1 is_stmt 1 view -0
+ 151              		.cfi_startproc
+ 152              		@ args = 0, pretend = 0, frame = 0
+ 153              		@ frame_needed = 0, uses_anonymous_args = 0
+ 118:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_CURRENT);
+ 154              		.loc 1 118 1 is_stmt 0 view .LVU27
+ 155 0000 10B5     		push	{r4, lr}
+ 156              		.cfi_def_cfa_offset 8
+ 157              		.cfi_offset 4, -8
+ 158              		.cfi_offset 14, -4
+ 159 0002 0446     		mov	r4, r0
+ 119:Core/Src/ina219.c ****   return reg_val * sensor->current_lsb;
+ 160              		.loc 1 119 3 is_stmt 1 view .LVU28
+ 119:Core/Src/ina219.c ****   return reg_val * sensor->current_lsb;
+ 161              		.loc 1 119 22 is_stmt 0 view .LVU29
+ 162 0004 0421     		movs	r1, #4
+ 163 0006 FFF7FEFF 		bl	i2c_read
+ 164              	.LVL13:
+ 120:Core/Src/ina219.c **** }
+ 165              		.loc 1 120 3 is_stmt 1 view .LVU30
+ 120:Core/Src/ina219.c **** }
+ 166              		.loc 1 120 26 is_stmt 0 view .LVU31
+ 167 000a 6468     		ldr	r4, [r4, #4]	@ float
+ 168              	.LVL14:
+ 120:Core/Src/ina219.c **** }
+ 169              		.loc 1 120 18 view .LVU32
+ 170 000c FFF7FEFF 		bl	__aeabi_i2f
+ 171              	.LVL15:
+ 120:Core/Src/ina219.c **** }
+ 172              		.loc 1 120 18 view .LVU33
+ 173 0010 2146     		mov	r1, r4
+ 174 0012 FFF7FEFF 		bl	__aeabi_fmul
+ 175              	.LVL16:
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 7
+
+
+ 121:Core/Src/ina219.c **** 
+ 176              		.loc 1 121 1 view .LVU34
+ 177 0016 10BD     		pop	{r4, pc}
+ 178              		.cfi_endproc
+ 179              	.LFE74:
+ 181              		.section	.text.ina219_get_shunt_voltage,"ax",%progbits
+ 182              		.align	1
+ 183              		.global	ina219_get_shunt_voltage
+ 184              		.syntax unified
+ 185              		.thumb
+ 186              		.thumb_func
+ 188              	ina219_get_shunt_voltage:
+ 189              	.LVL17:
+ 190              	.LFB75:
+ 125:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_SHUNT_VOLTAGE);
+ 191              		.loc 1 125 1 is_stmt 1 view -0
+ 192              		.cfi_startproc
+ 193              		@ args = 0, pretend = 0, frame = 0
+ 194              		@ frame_needed = 0, uses_anonymous_args = 0
+ 125:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_SHUNT_VOLTAGE);
+ 195              		.loc 1 125 1 is_stmt 0 view .LVU36
+ 196 0000 08B5     		push	{r3, lr}
+ 197              		.cfi_def_cfa_offset 8
+ 198              		.cfi_offset 3, -8
+ 199              		.cfi_offset 14, -4
+ 126:Core/Src/ina219.c ****   const float shunt_voltage_lsb = 1e-5; // 10uV
+ 200              		.loc 1 126 3 is_stmt 1 view .LVU37
+ 126:Core/Src/ina219.c ****   const float shunt_voltage_lsb = 1e-5; // 10uV
+ 201              		.loc 1 126 22 is_stmt 0 view .LVU38
+ 202 0002 0121     		movs	r1, #1
+ 203 0004 FFF7FEFF 		bl	i2c_read
+ 204              	.LVL18:
+ 127:Core/Src/ina219.c ****   return reg_val * shunt_voltage_lsb;
+ 205              		.loc 1 127 3 is_stmt 1 view .LVU39
+ 128:Core/Src/ina219.c **** }
+ 206              		.loc 1 128 3 view .LVU40
+ 128:Core/Src/ina219.c **** }
+ 207              		.loc 1 128 18 is_stmt 0 view .LVU41
+ 208 0008 FFF7FEFF 		bl	__aeabi_i2f
+ 209              	.LVL19:
+ 128:Core/Src/ina219.c **** }
+ 210              		.loc 1 128 18 view .LVU42
+ 211 000c 0149     		ldr	r1, .L13
+ 212 000e FFF7FEFF 		bl	__aeabi_fmul
+ 213              	.LVL20:
+ 129:Core/Src/ina219.c **** 
+ 214              		.loc 1 129 1 view .LVU43
+ 215 0012 08BD     		pop	{r3, pc}
+ 216              	.L14:
+ 217              		.align	2
+ 218              	.L13:
+ 219 0014 ACC52737 		.word	925353388
+ 220              		.cfi_endproc
+ 221              	.LFE75:
+ 223              		.section	.text.ina219_get_power,"ax",%progbits
+ 224              		.align	1
+ 225              		.global	ina219_get_power
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 8
+
+
+ 226              		.syntax unified
+ 227              		.thumb
+ 228              		.thumb_func
+ 230              	ina219_get_power:
+ 231              	.LVL21:
+ 232              	.LFB76:
+ 133:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_POWER);
+ 233              		.loc 1 133 1 is_stmt 1 view -0
+ 234              		.cfi_startproc
+ 235              		@ args = 0, pretend = 0, frame = 0
+ 236              		@ frame_needed = 0, uses_anonymous_args = 0
+ 133:Core/Src/ina219.c ****   uint16_t reg_val = i2c_read(sensor, INA219_REG_POWER);
+ 237              		.loc 1 133 1 is_stmt 0 view .LVU45
+ 238 0000 10B5     		push	{r4, lr}
+ 239              		.cfi_def_cfa_offset 8
+ 240              		.cfi_offset 4, -8
+ 241              		.cfi_offset 14, -4
+ 242 0002 0446     		mov	r4, r0
+ 134:Core/Src/ina219.c ****   return reg_val * 20 * sensor->current_lsb;
+ 243              		.loc 1 134 3 is_stmt 1 view .LVU46
+ 134:Core/Src/ina219.c ****   return reg_val * 20 * sensor->current_lsb;
+ 244              		.loc 1 134 22 is_stmt 0 view .LVU47
+ 245 0004 0321     		movs	r1, #3
+ 246 0006 FFF7FEFF 		bl	i2c_read
+ 247              	.LVL22:
+ 135:Core/Src/ina219.c **** }
+ 248              		.loc 1 135 3 is_stmt 1 view .LVU48
+ 135:Core/Src/ina219.c **** }
+ 249              		.loc 1 135 18 is_stmt 0 view .LVU49
+ 250 000a 00EB8000 		add	r0, r0, r0, lsl #2
+ 251              	.LVL23:
+ 135:Core/Src/ina219.c **** }
+ 252              		.loc 1 135 31 view .LVU50
+ 253 000e 6468     		ldr	r4, [r4, #4]	@ float
+ 254              	.LVL24:
+ 135:Core/Src/ina219.c **** }
+ 255              		.loc 1 135 23 view .LVU51
+ 256 0010 8000     		lsls	r0, r0, #2
+ 257 0012 FFF7FEFF 		bl	__aeabi_i2f
+ 258              	.LVL25:
+ 259 0016 2146     		mov	r1, r4
+ 260 0018 FFF7FEFF 		bl	__aeabi_fmul
+ 261              	.LVL26:
+ 136:Core/Src/ina219.c **** 
+ 262              		.loc 1 136 1 view .LVU52
+ 263 001c 10BD     		pop	{r4, pc}
+ 264              		.cfi_endproc
+ 265              	.LFE76:
+ 267              		.section	.text.ina219_get_status,"ax",%progbits
+ 268              		.align	1
+ 269              		.global	ina219_get_status
+ 270              		.syntax unified
+ 271              		.thumb
+ 272              		.thumb_func
+ 274              	ina219_get_status:
+ 275              	.LVL27:
+ 276              	.LFB77:
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 9
+
+
+ 140:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CONFIGURATION) == sensor->config_val)
+ 277              		.loc 1 140 1 is_stmt 1 view -0
+ 278              		.cfi_startproc
+ 279              		@ args = 0, pretend = 0, frame = 0
+ 280              		@ frame_needed = 0, uses_anonymous_args = 0
+ 140:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CONFIGURATION) == sensor->config_val)
+ 281              		.loc 1 140 1 is_stmt 0 view .LVU54
+ 282 0000 10B5     		push	{r4, lr}
+ 283              		.cfi_def_cfa_offset 8
+ 284              		.cfi_offset 4, -8
+ 285              		.cfi_offset 14, -4
+ 286 0002 0446     		mov	r4, r0
+ 141:Core/Src/ina219.c ****   {
+ 287              		.loc 1 141 3 is_stmt 1 view .LVU55
+ 141:Core/Src/ina219.c ****   {
+ 288              		.loc 1 141 6 is_stmt 0 view .LVU56
+ 289 0004 0021     		movs	r1, #0
+ 290 0006 FFF7FEFF 		bl	i2c_read
+ 291              	.LVL28:
+ 141:Core/Src/ina219.c ****   {
+ 292              		.loc 1 141 58 discriminator 1 view .LVU57
+ 293 000a 2389     		ldrh	r3, [r4, #8]
+ 141:Core/Src/ina219.c ****   {
+ 294              		.loc 1 141 5 discriminator 1 view .LVU58
+ 295 000c 9842     		cmp	r0, r3
+ 296 000e 01D0     		beq	.L19
+ 145:Core/Src/ina219.c **** }
+ 297              		.loc 1 145 10 view .LVU59
+ 298 0010 0020     		movs	r0, #0
+ 299              	.L18:
+ 146:Core/Src/ina219.c **** 
+ 300              		.loc 1 146 1 view .LVU60
+ 301 0012 10BD     		pop	{r4, pc}
+ 302              	.LVL29:
+ 303              	.L19:
+ 143:Core/Src/ina219.c ****   }
+ 304              		.loc 1 143 12 view .LVU61
+ 305 0014 0120     		movs	r0, #1
+ 306 0016 FCE7     		b	.L18
+ 307              		.cfi_endproc
+ 308              	.LFE77:
+ 310              		.section	.text.i2c_write,"ax",%progbits
+ 311              		.align	1
+ 312              		.global	i2c_write
+ 313              		.syntax unified
+ 314              		.thumb
+ 315              		.thumb_func
+ 317              	i2c_write:
+ 318              	.LVL30:
+ 319              	.LFB79:
+ 156:Core/Src/ina219.c **** 
+ 157:Core/Src/ina219.c **** bool i2c_write(INA219_t *sensor, const uint8_t reg, const uint16_t val){
+ 320              		.loc 1 157 72 is_stmt 1 view -0
+ 321              		.cfi_startproc
+ 322              		@ args = 0, pretend = 0, frame = 8
+ 323              		@ frame_needed = 0, uses_anonymous_args = 0
+ 324              		.loc 1 157 72 is_stmt 0 view .LVU63
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 10
+
+
+ 325 0000 00B5     		push	{lr}
+ 326              		.cfi_def_cfa_offset 4
+ 327              		.cfi_offset 14, -4
+ 328 0002 85B0     		sub	sp, sp, #20
+ 329              		.cfi_def_cfa_offset 24
+ 158:Core/Src/ina219.c ****   uint8_t data[3] = {reg, (uint8_t)(val >> 8), (uint8_t)(val & 0xFF)};
+ 330              		.loc 1 158 3 is_stmt 1 view .LVU64
+ 331              		.loc 1 158 11 is_stmt 0 view .LVU65
+ 332 0004 8DF80C10 		strb	r1, [sp, #12]
+ 333              		.loc 1 158 27 view .LVU66
+ 334 0008 130A     		lsrs	r3, r2, #8
+ 335              		.loc 1 158 11 view .LVU67
+ 336 000a 8DF80D30 		strb	r3, [sp, #13]
+ 337 000e 8DF80E20 		strb	r2, [sp, #14]
+ 159:Core/Src/ina219.c ****   // if (HAL_I2C_Master_Transmit(&hi2c2, sensor->address << 1, data, 3, HAL_MAX_DELAY) == HAL_OK)
+ 160:Core/Src/ina219.c ****   // {
+ 161:Core/Src/ina219.c ****   //   return true;
+ 162:Core/Src/ina219.c ****   // }
+ 163:Core/Src/ina219.c ****   // return false;
+ 164:Core/Src/ina219.c ****   if (HAL_I2C_Master_Transmit(&hi2c1, sensor->address << 1, data, 3, HAL_MAX_DELAY) == HAL_OK)
+ 338              		.loc 1 164 3 is_stmt 1 view .LVU68
+ 339              		.loc 1 164 45 is_stmt 0 view .LVU69
+ 340 0012 0178     		ldrb	r1, [r0]	@ zero_extendqisi2
+ 341              	.LVL31:
+ 342              		.loc 1 164 7 view .LVU70
+ 343 0014 4FF0FF33 		mov	r3, #-1
+ 344 0018 0093     		str	r3, [sp]
+ 345 001a 0323     		movs	r3, #3
+ 346 001c 03AA     		add	r2, sp, #12
+ 347              	.LVL32:
+ 348              		.loc 1 164 7 view .LVU71
+ 349 001e 4900     		lsls	r1, r1, #1
+ 350 0020 0448     		ldr	r0, .L25
+ 351              	.LVL33:
+ 352              		.loc 1 164 7 view .LVU72
+ 353 0022 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 354              	.LVL34:
+ 355              		.loc 1 164 6 discriminator 1 view .LVU73
+ 356 0026 18B1     		cbz	r0, .L23
+ 165:Core/Src/ina219.c ****   {
+ 166:Core/Src/ina219.c ****     return true;
+ 167:Core/Src/ina219.c ****   }
+ 168:Core/Src/ina219.c ****   return false;
+ 357              		.loc 1 168 10 view .LVU74
+ 358 0028 0020     		movs	r0, #0
+ 359              	.L22:
+ 169:Core/Src/ina219.c **** }...
+ 360              		.loc 1 169 1 view .LVU75
+ 361 002a 05B0     		add	sp, sp, #20
+ 362              		.cfi_remember_state
+ 363              		.cfi_def_cfa_offset 4
+ 364              		@ sp needed
+ 365 002c 5DF804FB 		ldr	pc, [sp], #4
+ 366              	.L23:
+ 367              		.cfi_restore_state
+ 166:Core/Src/ina219.c ****     return true;
+ 368              		.loc 1 166 12 view .LVU76
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 11
+
+
+ 369 0030 0120     		movs	r0, #1
+ 370 0032 FAE7     		b	.L22
+ 371              	.L26:
+ 372              		.align	2
+ 373              	.L25:
+ 374 0034 00000000 		.word	hi2c1
+ 375              		.cfi_endproc
+ 376              	.LFE79:
+ 378              		.section	.text.ina219_save_power,"ax",%progbits
+ 379              		.align	1
+ 380              		.global	ina219_save_power
+ 381              		.syntax unified
+ 382              		.thumb
+ 383              		.thumb_func
+ 385              	ina219_save_power:
+ 386              	.LVL35:
+ 387              	.LFB69:
+  37:Core/Src/ina219.c **** {
+ 388              		.loc 1 37 1 is_stmt 1 view -0
+ 389              		.cfi_startproc
+ 390              		@ args = 0, pretend = 0, frame = 0
+ 391              		@ frame_needed = 0, uses_anonymous_args = 0
+  37:Core/Src/ina219.c **** {
+ 392              		.loc 1 37 1 is_stmt 0 view .LVU78
+ 393 0000 10B5     		push	{r4, lr}
+ 394              		.cfi_def_cfa_offset 8
+ 395              		.cfi_offset 4, -8
+ 396              		.cfi_offset 14, -4
+ 397 0002 0446     		mov	r4, r0
+  38:Core/Src/ina219.c ****   uint16_t config = i2c_read(sensor, INA219_REG_CONFIGURATION);
+ 398              		.loc 1 38 3 is_stmt 1 view .LVU79
+  38:Core/Src/ina219.c ****   uint16_t config = i2c_read(sensor, INA219_REG_CONFIGURATION);
+ 399              		.loc 1 38 21 is_stmt 0 view .LVU80
+ 400 0004 0021     		movs	r1, #0
+ 401 0006 FFF7FEFF 		bl	i2c_read
+ 402              	.LVL36:
+  40:Core/Src/ina219.c ****   if (sensor->power_on){
+ 403              		.loc 1 40 3 is_stmt 1 view .LVU81
+  40:Core/Src/ina219.c ****   if (sensor->power_on){
+ 404              		.loc 1 40 13 is_stmt 0 view .LVU82
+ 405 000a A37A     		ldrb	r3, [r4, #10]	@ zero_extendqisi2
+  40:Core/Src/ina219.c ****   if (sensor->power_on){
+ 406              		.loc 1 40 6 view .LVU83
+ 407 000c 3BB1     		cbz	r3, .L28
+  41:Core/Src/ina219.c ****     config = (config & 0xFFF8) | INA219_CONFIG_MODE_POWERDOWN;
+ 408              		.loc 1 41 5 is_stmt 1 view .LVU84
+  41:Core/Src/ina219.c ****     config = (config & 0xFFF8) | INA219_CONFIG_MODE_POWERDOWN;
+ 409              		.loc 1 41 12 is_stmt 0 view .LVU85
+ 410 000e 20F00702 		bic	r2, r0, #7
+ 411 0012 92B2     		uxth	r2, r2
+ 412              	.LVL37:
+ 413              	.L29:
+  46:Core/Src/ina219.c ****   i2c_write (sensor, INA219_REG_CONFIGURATION, config);
+ 414              		.loc 1 46 3 is_stmt 1 view .LVU86
+ 415 0014 0021     		movs	r1, #0
+ 416 0016 2046     		mov	r0, r4
+ 417 0018 FFF7FEFF 		bl	i2c_write
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 12
+
+
+ 418              	.LVL38:
+  47:Core/Src/ina219.c **** }
+ 419              		.loc 1 47 1 is_stmt 0 view .LVU87
+ 420 001c 10BD     		pop	{r4, pc}
+ 421              	.LVL39:
+ 422              	.L28:
+  44:Core/Src/ina219.c ****     config = (config & 0xFFF8) | INA219_CONFIG_MODE_SHUNT_AND_BUS_CONT;
+ 423              		.loc 1 44 5 is_stmt 1 view .LVU88
+  44:Core/Src/ina219.c ****     config = (config & 0xFFF8) | INA219_CONFIG_MODE_SHUNT_AND_BUS_CONT;
+ 424              		.loc 1 44 12 is_stmt 0 view .LVU89
+ 425 001e 40F00702 		orr	r2, r0, #7
+ 426 0022 92B2     		uxth	r2, r2
+ 427 0024 F6E7     		b	.L29
+ 428              		.cfi_endproc
+ 429              	.LFE69:
+ 431              		.section	.rodata.ina219_reset.str1.4,"aMS",%progbits,1
+ 432              		.align	2
+ 433              	.LC0:
+ 434 0000 494E4132 		.ascii	"INA219 reset successful!\000"
+ 434      31392072 
+ 434      65736574 
+ 434      20737563 
+ 434      63657373 
+ 435 0019 000000   		.align	2
+ 436              	.LC1:
+ 437 001c 494E4132 		.ascii	"INA219 reset failed!\000"
+ 437      31392072 
+ 437      65736574 
+ 437      20666169 
+ 437      6C656421 
+ 438              		.section	.text.ina219_reset,"ax",%progbits
+ 439              		.align	1
+ 440              		.global	ina219_reset
+ 441              		.syntax unified
+ 442              		.thumb
+ 443              		.thumb_func
+ 445              	ina219_reset:
+ 446              	.LVL40:
+ 447              	.LFB70:
+  51:Core/Src/ina219.c **** {
+ 448              		.loc 1 51 1 is_stmt 1 view -0
+ 449              		.cfi_startproc
+ 450              		@ args = 0, pretend = 0, frame = 0
+ 451              		@ frame_needed = 0, uses_anonymous_args = 0
+  51:Core/Src/ina219.c **** {
+ 452              		.loc 1 51 1 is_stmt 0 view .LVU91
+ 453 0000 10B5     		push	{r4, lr}
+ 454              		.cfi_def_cfa_offset 8
+ 455              		.cfi_offset 4, -8
+ 456              		.cfi_offset 14, -4
+ 457 0002 0446     		mov	r4, r0
+  52:Core/Src/ina219.c ****   if(i2c_write(sensor, INA219_REG_CONFIGURATION, 0x8000)){
+ 458              		.loc 1 52 3 is_stmt 1 view .LVU92
+  52:Core/Src/ina219.c ****   if(i2c_write(sensor, INA219_REG_CONFIGURATION, 0x8000)){
+ 459              		.loc 1 52 6 is_stmt 0 view .LVU93
+ 460 0004 4FF40042 		mov	r2, #32768
+ 461 0008 0021     		movs	r1, #0
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 13
+
+
+ 462 000a FFF7FEFF 		bl	i2c_write
+ 463              	.LVL41:
+  52:Core/Src/ina219.c ****   if(i2c_write(sensor, INA219_REG_CONFIGURATION, 0x8000)){
+ 464              		.loc 1 52 5 discriminator 1 view .LVU94
+ 465 000e 78B1     		cbz	r0, .L32
+  53:Core/Src/ina219.c ****     printf("INA219 reset successful!\n");
+ 466              		.loc 1 53 5 is_stmt 1 view .LVU95
+ 467 0010 0D48     		ldr	r0, .L38
+ 468 0012 FFF7FEFF 		bl	puts
+ 469              	.LVL42:
+ 470              	.L33:
+  59:Core/Src/ina219.c ****   if (i2c_read(sensor, INA219_REG_CONFIGURATION) == 0x399F)
+ 471              		.loc 1 59 3 view .LVU96
+  59:Core/Src/ina219.c ****   if (i2c_read(sensor, INA219_REG_CONFIGURATION) == 0x399F)
+ 472              		.loc 1 59 7 is_stmt 0 view .LVU97
+ 473 0016 0021     		movs	r1, #0
+ 474 0018 2046     		mov	r0, r4
+ 475 001a FFF7FEFF 		bl	i2c_read
+ 476              	.LVL43:
+  59:Core/Src/ina219.c ****   if (i2c_read(sensor, INA219_REG_CONFIGURATION) == 0x399F)
+ 477              		.loc 1 59 6 discriminator 1 view .LVU98
+ 478 001e 43F69F13 		movw	r3, #14751
+ 479 0022 9842     		cmp	r0, r3
+ 480 0024 08D0     		beq	.L37
+  67:Core/Src/ina219.c ****     printf("INA219 reset failed!\n");
+ 481              		.loc 1 67 5 is_stmt 1 view .LVU99
+ 482 0026 0948     		ldr	r0, .L38+4
+ 483 0028 FFF7FEFF 		bl	puts
+ 484              	.LVL44:
+  68:Core/Src/ina219.c ****     return false;
+ 485              		.loc 1 68 5 view .LVU100
+  68:Core/Src/ina219.c ****     return false;
+ 486              		.loc 1 68 12 is_stmt 0 view .LVU101
+ 487 002c 0020     		movs	r0, #0
+ 488              	.L35:
+  70:Core/Src/ina219.c **** }
+ 489              		.loc 1 70 1 view .LVU102
+ 490 002e 10BD     		pop	{r4, pc}
+ 491              	.LVL45:
+ 492              	.L32:
+  56:Core/Src/ina219.c ****     printf("INA219 reset failed!\n");
+ 493              		.loc 1 56 5 is_stmt 1 view .LVU103
+ 494 0030 0648     		ldr	r0, .L38+4
+ 495 0032 FFF7FEFF 		bl	puts
+ 496              	.LVL46:
+ 497 0036 EEE7     		b	.L33
+ 498              	.L37:
+  61:Core/Src/ina219.c ****     sensor->config_val = 0x399F;
+ 499              		.loc 1 61 5 view .LVU104
+  61:Core/Src/ina219.c ****     sensor->config_val = 0x399F;
+ 500              		.loc 1 61 24 is_stmt 0 view .LVU105
+ 501 0038 2381     		strh	r3, [r4, #8]	@ movhi
+  62:Core/Src/ina219.c ****     sensor->current_lsb = 0.0;
+ 502              		.loc 1 62 5 is_stmt 1 view .LVU106
+  62:Core/Src/ina219.c ****     sensor->current_lsb = 0.0;
+ 503              		.loc 1 62 25 is_stmt 0 view .LVU107
+ 504 003a 0023     		movs	r3, #0
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 14
+
+
+ 505 003c 6360     		str	r3, [r4, #4]	@ float
+  63:Core/Src/ina219.c ****     printf("INA219 reset successful!\n");
+ 506              		.loc 1 63 5 is_stmt 1 view .LVU108
+ 507 003e 0248     		ldr	r0, .L38
+ 508 0040 FFF7FEFF 		bl	puts
+ 509              	.LVL47:
+  64:Core/Src/ina219.c ****     return true;
+ 510              		.loc 1 64 5 view .LVU109
+  64:Core/Src/ina219.c ****     return true;
+ 511              		.loc 1 64 12 is_stmt 0 view .LVU110
+ 512 0044 0120     		movs	r0, #1
+ 513 0046 F2E7     		b	.L35
+ 514              	.L39:
+ 515              		.align	2
+ 516              	.L38:
+ 517 0048 00000000 		.word	.LC0
+ 518 004c 1C000000 		.word	.LC1
+ 519              		.cfi_endproc
+ 520              	.LFE70:
+ 522              		.section	.text.ina219_init,"ax",%progbits
+ 523              		.align	1
+ 524              		.global	ina219_init
+ 525              		.syntax unified
+ 526              		.thumb
+ 527              		.thumb_func
+ 529              	ina219_init:
+ 530              	.LVL48:
+ 531              	.LFB68:
+  27:Core/Src/ina219.c **** {
+ 532              		.loc 1 27 1 is_stmt 1 view -0
+ 533              		.cfi_startproc
+ 534              		@ args = 0, pretend = 0, frame = 0
+ 535              		@ frame_needed = 0, uses_anonymous_args = 0
+  27:Core/Src/ina219.c **** {
+ 536              		.loc 1 27 1 is_stmt 0 view .LVU112
+ 537 0000 08B5     		push	{r3, lr}
+ 538              		.cfi_def_cfa_offset 8
+ 539              		.cfi_offset 3, -8
+ 540              		.cfi_offset 14, -4
+  28:Core/Src/ina219.c ****   if(ina219_reset(sensor))
+ 541              		.loc 1 28 3 is_stmt 1 view .LVU113
+  28:Core/Src/ina219.c ****   if(ina219_reset(sensor))
+ 542              		.loc 1 28 6 is_stmt 0 view .LVU114
+ 543 0002 FFF7FEFF 		bl	ina219_reset
+ 544              	.LVL49:
+  34:Core/Src/ina219.c **** }
+ 545              		.loc 1 34 1 view .LVU115
+ 546 0006 08BD     		pop	{r3, pc}
+ 547              		.cfi_endproc
+ 548              	.LFE68:
+ 550              		.section	.text.ina219_calibrate,"ax",%progbits
+ 551              		.align	1
+ 552              		.global	ina219_calibrate
+ 553              		.syntax unified
+ 554              		.thumb
+ 555              		.thumb_func
+ 557              	ina219_calibrate:
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 15
+
+
+ 558              	.LVL50:
+ 559              	.LFB71:
+  79:Core/Src/ina219.c **** {
+ 560              		.loc 1 79 1 is_stmt 1 view -0
+ 561              		.cfi_startproc
+ 562              		@ args = 0, pretend = 0, frame = 0
+ 563              		@ frame_needed = 0, uses_anonymous_args = 0
+  79:Core/Src/ina219.c **** {
+ 564              		.loc 1 79 1 is_stmt 0 view .LVU117
+ 565 0000 70B5     		push	{r4, r5, r6, lr}
+ 566              		.cfi_def_cfa_offset 16
+ 567              		.cfi_offset 4, -16
+ 568              		.cfi_offset 5, -12
+ 569              		.cfi_offset 6, -8
+ 570              		.cfi_offset 14, -4
+ 571 0002 0546     		mov	r5, r0
+ 572 0004 0846     		mov	r0, r1
+ 573              	.LVL51:
+  79:Core/Src/ina219.c **** {
+ 574              		.loc 1 79 1 view .LVU118
+ 575 0006 1446     		mov	r4, r2
+  80:Core/Src/ina219.c ****   float temp_current_lsb = max_current * 3.0517578125e-5;
+ 576              		.loc 1 80 3 is_stmt 1 view .LVU119
+  80:Core/Src/ina219.c ****   float temp_current_lsb = max_current * 3.0517578125e-5;
+ 577              		.loc 1 80 9 is_stmt 0 view .LVU120
+ 578 0008 4FF06051 		mov	r1, #939524096
+ 579              	.LVL52:
+  80:Core/Src/ina219.c ****   float temp_current_lsb = max_current * 3.0517578125e-5;
+ 580              		.loc 1 80 9 view .LVU121
+ 581 000c FFF7FEFF 		bl	__aeabi_fmul
+ 582              	.LVL53:
+  80:Core/Src/ina219.c ****   float temp_current_lsb = max_current * 3.0517578125e-5;
+ 583              		.loc 1 80 9 view .LVU122
+ 584 0010 0646     		mov	r6, r0
+ 585              	.LVL54:
+  81:Core/Src/ina219.c ****   const uint16_t calibration_val = (uint16_t)(0.04096 / (temp_current_lsb * r_shunt));
+ 586              		.loc 1 81 3 is_stmt 1 view .LVU123
+  81:Core/Src/ina219.c ****   const uint16_t calibration_val = (uint16_t)(0.04096 / (temp_current_lsb * r_shunt));
+ 587              		.loc 1 81 75 is_stmt 0 view .LVU124
+ 588 0012 2146     		mov	r1, r4
+ 589 0014 FFF7FEFF 		bl	__aeabi_fmul
+ 590              	.LVL55:
+  81:Core/Src/ina219.c ****   const uint16_t calibration_val = (uint16_t)(0.04096 / (temp_current_lsb * r_shunt));
+ 591              		.loc 1 81 75 view .LVU125
+ 592 0018 FFF7FEFF 		bl	__aeabi_f2d
+ 593              	.LVL56:
+ 594 001c 0246     		mov	r2, r0
+ 595 001e 0B46     		mov	r3, r1
+  81:Core/Src/ina219.c ****   const uint16_t calibration_val = (uint16_t)(0.04096 / (temp_current_lsb * r_shunt));
+ 596              		.loc 1 81 55 view .LVU126
+ 597 0020 0DA1     		adr	r1, .L47
+ 598 0022 D1E90001 		ldrd	r0, [r1]
+ 599 0026 FFF7FEFF 		bl	__aeabi_ddiv
+ 600              	.LVL57:
+  81:Core/Src/ina219.c ****   const uint16_t calibration_val = (uint16_t)(0.04096 / (temp_current_lsb * r_shunt));
+ 601              		.loc 1 81 18 view .LVU127
+ 602 002a FFF7FEFF 		bl	__aeabi_d2uiz
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 16
+
+
+ 603              	.LVL58:
+ 604 002e 84B2     		uxth	r4, r0
+ 605              	.LVL59:
+  82:Core/Src/ina219.c ****   i2c_write(sensor, INA219_REG_CALIBRATION, calibration_val);
+ 606              		.loc 1 82 3 is_stmt 1 view .LVU128
+ 607 0030 2246     		mov	r2, r4
+ 608 0032 0521     		movs	r1, #5
+ 609 0034 2846     		mov	r0, r5
+ 610 0036 FFF7FEFF 		bl	i2c_write
+ 611              	.LVL60:
+  85:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CALIBRATION) == (calibration_val & 0xFFFE))
+ 612              		.loc 1 85 3 view .LVU129
+  85:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CALIBRATION) == (calibration_val & 0xFFFE))
+ 613              		.loc 1 85 6 is_stmt 0 view .LVU130
+ 614 003a 0521     		movs	r1, #5
+ 615 003c 2846     		mov	r0, r5
+ 616 003e FFF7FEFF 		bl	i2c_read
+ 617              	.LVL61:
+  85:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CALIBRATION) == (calibration_val & 0xFFFE))
+ 618              		.loc 1 85 5 discriminator 1 view .LVU131
+ 619 0042 24F00104 		bic	r4, r4, #1
+ 620              	.LVL62:
+  85:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CALIBRATION) == (calibration_val & 0xFFFE))
+ 621              		.loc 1 85 5 discriminator 1 view .LVU132
+ 622 0046 8442     		cmp	r4, r0
+ 623 0048 01D0     		beq	.L46
+  91:Core/Src/ina219.c ****   return false;
+ 624              		.loc 1 91 10 view .LVU133
+ 625 004a 0020     		movs	r0, #0
+ 626              	.L43:
+  92:Core/Src/ina219.c **** }
+ 627              		.loc 1 92 1 view .LVU134
+ 628 004c 70BD     		pop	{r4, r5, r6, pc}
+ 629              	.LVL63:
+ 630              	.L46:
+  87:Core/Src/ina219.c ****     sensor->current_lsb = temp_current_lsb;
+ 631              		.loc 1 87 5 is_stmt 1 view .LVU135
+  87:Core/Src/ina219.c ****     sensor->current_lsb = temp_current_lsb;
+ 632              		.loc 1 87 25 is_stmt 0 view .LVU136
+ 633 004e 6E60     		str	r6, [r5, #4]	@ float
+  88:Core/Src/ina219.c ****     return true;
+ 634              		.loc 1 88 5 is_stmt 1 view .LVU137
+  88:Core/Src/ina219.c ****     return true;
+ 635              		.loc 1 88 12 is_stmt 0 view .LVU138
+ 636 0050 0120     		movs	r0, #1
+ 637 0052 FBE7     		b	.L43
+ 638              	.L48:
+ 639 0054 AFF30080 		.align	3
+ 640              	.L47:
+ 641 0058 F168E388 		.word	-1998362383
+ 642 005c B5F8A43F 		.word	1067776181
+ 643              		.cfi_endproc
+ 644              	.LFE71:
+ 646              		.section	.text.ina219_configure,"ax",%progbits
+ 647              		.align	1
+ 648              		.global	ina219_configure
+ 649              		.syntax unified
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 17
+
+
+ 650              		.thumb
+ 651              		.thumb_func
+ 653              	ina219_configure:
+ 654              	.LVL64:
+ 655              	.LFB72:
+  96:Core/Src/ina219.c **** {
+ 656              		.loc 1 96 1 is_stmt 1 view -0
+ 657              		.cfi_startproc
+ 658              		@ args = 0, pretend = 0, frame = 0
+ 659              		@ frame_needed = 0, uses_anonymous_args = 0
+  96:Core/Src/ina219.c **** {
+ 660              		.loc 1 96 1 is_stmt 0 view .LVU140
+ 661 0000 38B5     		push	{r3, r4, r5, lr}
+ 662              		.cfi_def_cfa_offset 16
+ 663              		.cfi_offset 3, -16
+ 664              		.cfi_offset 4, -12
+ 665              		.cfi_offset 5, -8
+ 666              		.cfi_offset 14, -4
+ 667 0002 0546     		mov	r5, r0
+ 668 0004 0C46     		mov	r4, r1
+  97:Core/Src/ina219.c ****   i2c_write(sensor, INA219_REG_CONFIGURATION, val);
+ 669              		.loc 1 97 3 is_stmt 1 view .LVU141
+ 670 0006 0A46     		mov	r2, r1
+ 671 0008 0021     		movs	r1, #0
+ 672              	.LVL65:
+  97:Core/Src/ina219.c ****   i2c_write(sensor, INA219_REG_CONFIGURATION, val);
+ 673              		.loc 1 97 3 is_stmt 0 view .LVU142
+ 674 000a FFF7FEFF 		bl	i2c_write
+ 675              	.LVL66:
+  99:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CONFIGURATION) == val)
+ 676              		.loc 1 99 3 is_stmt 1 view .LVU143
+  99:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CONFIGURATION) == val)
+ 677              		.loc 1 99 6 is_stmt 0 view .LVU144
+ 678 000e 0021     		movs	r1, #0
+ 679 0010 2846     		mov	r0, r5
+ 680 0012 FFF7FEFF 		bl	i2c_read
+ 681              	.LVL67:
+  99:Core/Src/ina219.c ****   if(i2c_read(sensor, INA219_REG_CONFIGURATION) == val)
+ 682              		.loc 1 99 5 discriminator 1 view .LVU145
+ 683 0016 A042     		cmp	r0, r4
+ 684 0018 01D0     		beq	.L53
+ 105:Core/Src/ina219.c ****   return false;
+ 685              		.loc 1 105 10 view .LVU146
+ 686 001a 0020     		movs	r0, #0
+ 687              	.L50:
+ 106:Core/Src/ina219.c **** }
+ 688              		.loc 1 106 1 view .LVU147
+ 689 001c 38BD     		pop	{r3, r4, r5, pc}
+ 690              	.LVL68:
+ 691              	.L53:
+ 101:Core/Src/ina219.c ****     sensor->config_val = val;
+ 692              		.loc 1 101 5 is_stmt 1 view .LVU148
+ 101:Core/Src/ina219.c ****     sensor->config_val = val;
+ 693              		.loc 1 101 24 is_stmt 0 view .LVU149
+ 694 001e 2C81     		strh	r4, [r5, #8]	@ movhi
+ 102:Core/Src/ina219.c ****     return true;
+ 695              		.loc 1 102 5 is_stmt 1 view .LVU150
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 18
+
+
+ 102:Core/Src/ina219.c ****     return true;
+ 696              		.loc 1 102 12 is_stmt 0 view .LVU151
+ 697 0020 0120     		movs	r0, #1
+ 698 0022 FBE7     		b	.L50
+ 699              		.cfi_endproc
+ 700              	.LFE72:
+ 702              		.global	current_lsb
+ 703              		.section	.bss.current_lsb,"aw",%nobits
+ 704              		.align	2
+ 707              	current_lsb:
+ 708 0000 00000000 		.space	4
+ 709              		.global	config_val
+ 710              		.section	.data.config_val,"aw"
+ 711              		.align	1
+ 714              	config_val:
+ 715 0000 9F39     		.short	14751
+ 716              		.text
+ 717              	.Letext0:
+ 718              		.file 2 "C:/Users/aavas/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+ 719              		.file 3 "C:/Users/aavas/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+ 720              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 721              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 722              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 723              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h"
+ 724              		.file 8 "Core/Inc/ina219.h"
+ 725              		.file 9 "<built-in>"
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s 			page 19
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ina219.c
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:19     .text.i2c_read:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:25     .text.i2c_read:00000000 i2c_read
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:92     .text.i2c_read:00000048 $d
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:97     .text.ina219_get_bus_voltage:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:103    .text.ina219_get_bus_voltage:00000000 ina219_get_bus_voltage
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:136    .text.ina219_get_bus_voltage:00000018 $d
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:141    .text.ina219_get_current:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:147    .text.ina219_get_current:00000000 ina219_get_current
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:182    .text.ina219_get_shunt_voltage:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:188    .text.ina219_get_shunt_voltage:00000000 ina219_get_shunt_voltage
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:219    .text.ina219_get_shunt_voltage:00000014 $d
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:224    .text.ina219_get_power:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:230    .text.ina219_get_power:00000000 ina219_get_power
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:268    .text.ina219_get_status:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:274    .text.ina219_get_status:00000000 ina219_get_status
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:311    .text.i2c_write:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:317    .text.i2c_write:00000000 i2c_write
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:374    .text.i2c_write:00000034 $d
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:379    .text.ina219_save_power:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:385    .text.ina219_save_power:00000000 ina219_save_power
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:432    .rodata.ina219_reset.str1.4:00000000 $d
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:439    .text.ina219_reset:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:445    .text.ina219_reset:00000000 ina219_reset
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:517    .text.ina219_reset:00000048 $d
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:523    .text.ina219_init:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:529    .text.ina219_init:00000000 ina219_init
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:551    .text.ina219_calibrate:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:557    .text.ina219_calibrate:00000000 ina219_calibrate
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:641    .text.ina219_calibrate:00000058 $d
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:647    .text.ina219_configure:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:653    .text.ina219_configure:00000000 ina219_configure
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:707    .bss.current_lsb:00000000 current_lsb
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:704    .bss.current_lsb:00000000 $d
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:714    .data.config_val:00000000 config_val
+C:\Users\aavas\AppData\Local\Temp\ccldOVDd.s:711    .data.config_val:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_I2C_Master_Transmit
+HAL_I2C_Master_Receive
+hi2c1
+__aeabi_i2f
+__aeabi_fmul
+puts
+__aeabi_f2d
+__aeabi_ddiv
+__aeabi_d2uiz

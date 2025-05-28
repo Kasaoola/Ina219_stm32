@@ -1,0 +1,1355 @@
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/main.c"
+  18              		.section	.text._write,"ax",%progbits
+  19              		.align	1
+  20              		.global	_write
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	_write:
+  26              	.LVL0:
+  27              	.LFB68:
+   1:Core/Src/main.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/main.c **** /**
+   3:Core/Src/main.c ****   ******************************************************************************
+   4:Core/Src/main.c ****   * @file           : main.c
+   5:Core/Src/main.c ****   * @brief          : Main program body
+   6:Core/Src/main.c ****   ******************************************************************************
+   7:Core/Src/main.c ****   * @attention
+   8:Core/Src/main.c ****   *
+   9:Core/Src/main.c ****   * Copyright (c) 2025 STMicroelectronics.
+  10:Core/Src/main.c ****   * All rights reserved.
+  11:Core/Src/main.c ****   *
+  12:Core/Src/main.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/main.c ****   * in the root directory of this software component.
+  14:Core/Src/main.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/main.c ****   *
+  16:Core/Src/main.c ****   ******************************************************************************
+  17:Core/Src/main.c ****   */
+  18:Core/Src/main.c **** /* USER CODE END Header */
+  19:Core/Src/main.c **** /* Includes ------------------------------------------------------------------*/
+  20:Core/Src/main.c **** #include "main.h"
+  21:Core/Src/main.c **** #include "i2c.h"
+  22:Core/Src/main.c **** #include "usart.h"
+  23:Core/Src/main.c **** #include "gpio.h"
+  24:Core/Src/main.c **** #include "ina219.h"
+  25:Core/Src/main.c **** #include <stdio.h>
+  26:Core/Src/main.c **** 
+  27:Core/Src/main.c **** /* Private includes ----------------------------------------------------------*/
+  28:Core/Src/main.c **** /* USER CODE BEGIN Includes */
+  29:Core/Src/main.c **** INA219_t battery = { .address = 0x40 };
+  30:Core/Src/main.c **** INA219_t system = { .address = 0x41 };
+  31:Core/Src/main.c **** /* USER CODE END Includes */
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 2
+
+
+  32:Core/Src/main.c **** 
+  33:Core/Src/main.c **** /* Private typedef -----------------------------------------------------------*/
+  34:Core/Src/main.c **** /* USER CODE BEGIN PTD */
+  35:Core/Src/main.c **** int _write(int file, char *data, int len){
+  28              		.loc 1 35 42 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 35 42 is_stmt 0 view .LVU1
+  33 0000 10B5     		push	{r4, lr}
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 4, -8
+  36              		.cfi_offset 14, -4
+  37 0002 1446     		mov	r4, r2
+  36:Core/Src/main.c ****   HAL_UART_Transmit(&huart1, (uint8_t*)data, len, HAL_MAX_DELAY);
+  38              		.loc 1 36 3 is_stmt 1 view .LVU2
+  39 0004 4FF0FF33 		mov	r3, #-1
+  40 0008 92B2     		uxth	r2, r2
+  41              	.LVL1:
+  42              		.loc 1 36 3 is_stmt 0 view .LVU3
+  43 000a 0248     		ldr	r0, .L3
+  44              	.LVL2:
+  45              		.loc 1 36 3 view .LVU4
+  46 000c FFF7FEFF 		bl	HAL_UART_Transmit
+  47              	.LVL3:
+  37:Core/Src/main.c ****   return len;
+  48              		.loc 1 37 3 is_stmt 1 view .LVU5
+  38:Core/Src/main.c **** }
+  49              		.loc 1 38 1 is_stmt 0 view .LVU6
+  50 0010 2046     		mov	r0, r4
+  51 0012 10BD     		pop	{r4, pc}
+  52              	.LVL4:
+  53              	.L4:
+  54              		.loc 1 38 1 view .LVU7
+  55              		.align	2
+  56              	.L3:
+  57 0014 00000000 		.word	huart1
+  58              		.cfi_endproc
+  59              	.LFE68:
+  61              		.section	.rodata.main_setup.str1.4,"aMS",%progbits,1
+  62              		.align	2
+  63              	.LC0:
+  64 0000 4E616D61 		.ascii	"Namaste!\000"
+  64      73746521 
+  64      00
+  65 0009 000000   		.align	2
+  66              	.LC1:
+  67 000c 494E4132 		.ascii	"INA219 init failed!\000"
+  67      31392069 
+  67      6E697420 
+  67      6661696C 
+  67      65642100 
+  68              		.align	2
+  69              	.LC2:
+  70 0020 494E4132 		.ascii	"INA219 init successful!\000"
+  70      31392069 
+  70      6E697420 
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 3
+
+
+  70      73756363 
+  70      65737366 
+  71              		.align	2
+  72              	.LC3:
+  73 0038 494E4132 		.ascii	"INA219 calibration failed!\000"
+  73      31392063 
+  73      616C6962 
+  73      72617469 
+  73      6F6E2066 
+  74 0053 00       		.align	2
+  75              	.LC4:
+  76 0054 494E4132 		.ascii	"INA219 calibration successful!\000"
+  76      31392063 
+  76      616C6962 
+  76      72617469 
+  76      6F6E2073 
+  77 0073 00       		.align	2
+  78              	.LC5:
+  79 0074 494E4132 		.ascii	"INA219 configuration failed!\000"
+  79      31392063 
+  79      6F6E6669 
+  79      67757261 
+  79      74696F6E 
+  80 0091 000000   		.align	2
+  81              	.LC6:
+  82 0094 494E4132 		.ascii	"INA219 configuration successful!\000"
+  82      31392063 
+  82      6F6E6669 
+  82      67757261 
+  82      74696F6E 
+  83              		.section	.text.main_setup,"ax",%progbits
+  84              		.align	1
+  85              		.global	main_setup
+  86              		.syntax unified
+  87              		.thumb
+  88              		.thumb_func
+  90              	main_setup:
+  91              	.LFB71:
+  39:Core/Src/main.c **** /* USER CODE END PTD */
+  40:Core/Src/main.c **** 
+  41:Core/Src/main.c **** /* Private define ------------------------------------------------------------*/
+  42:Core/Src/main.c **** /* USER CODE BEGIN PD */
+  43:Core/Src/main.c **** 
+  44:Core/Src/main.c **** /* USER CODE END PD */
+  45:Core/Src/main.c **** 
+  46:Core/Src/main.c **** /* Private macro -------------------------------------------------------------*/
+  47:Core/Src/main.c **** /* USER CODE BEGIN PM */
+  48:Core/Src/main.c **** 
+  49:Core/Src/main.c **** /* USER CODE END PM */
+  50:Core/Src/main.c **** 
+  51:Core/Src/main.c **** /* Private variables ---------------------------------------------------------*/
+  52:Core/Src/main.c **** 
+  53:Core/Src/main.c **** /* USER CODE BEGIN PV */
+  54:Core/Src/main.c **** 
+  55:Core/Src/main.c **** /* USER CODE END PV */
+  56:Core/Src/main.c **** 
+  57:Core/Src/main.c **** /* Private function prototypes -----------------------------------------------*/
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 4
+
+
+  58:Core/Src/main.c **** void SystemClock_Config(void);
+  59:Core/Src/main.c **** /* USER CODE BEGIN PFP */
+  60:Core/Src/main.c **** void main_setup (void);
+  61:Core/Src/main.c **** void main_loop (void);
+  62:Core/Src/main.c **** /* USER CODE END PFP */
+  63:Core/Src/main.c **** 
+  64:Core/Src/main.c **** /* Private user code ---------------------------------------------------------*/
+  65:Core/Src/main.c **** /* USER CODE BEGIN 0 */
+  66:Core/Src/main.c **** 
+  67:Core/Src/main.c **** /* USER CODE END 0 */
+  68:Core/Src/main.c **** 
+  69:Core/Src/main.c **** /**
+  70:Core/Src/main.c ****   * @brief  The application entry point.
+  71:Core/Src/main.c ****   * @retval int
+  72:Core/Src/main.c ****   */
+  73:Core/Src/main.c **** int main(void)
+  74:Core/Src/main.c **** {
+  75:Core/Src/main.c **** 
+  76:Core/Src/main.c ****   /* USER CODE BEGIN 1 */
+  77:Core/Src/main.c **** 
+  78:Core/Src/main.c ****   /* USER CODE END 1 */
+  79:Core/Src/main.c **** 
+  80:Core/Src/main.c ****   /* MCU Configuration--------------------------------------------------------*/
+  81:Core/Src/main.c **** 
+  82:Core/Src/main.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  83:Core/Src/main.c ****   HAL_Init();
+  84:Core/Src/main.c **** 
+  85:Core/Src/main.c ****   /* USER CODE BEGIN Init */
+  86:Core/Src/main.c **** 
+  87:Core/Src/main.c ****   /* USER CODE END Init */
+  88:Core/Src/main.c **** 
+  89:Core/Src/main.c ****   /* Configure the system clock */
+  90:Core/Src/main.c ****   SystemClock_Config();
+  91:Core/Src/main.c **** 
+  92:Core/Src/main.c ****   /* USER CODE BEGIN SysInit */
+  93:Core/Src/main.c **** 
+  94:Core/Src/main.c ****   /* USER CODE END SysInit */
+  95:Core/Src/main.c **** 
+  96:Core/Src/main.c ****   /* Initialize all configured peripherals */
+  97:Core/Src/main.c ****   MX_GPIO_Init();
+  98:Core/Src/main.c ****   // MX_I2C2_Init();
+  99:Core/Src/main.c ****   MX_I2C1_Init();
+ 100:Core/Src/main.c ****   MX_USART1_UART_Init();
+ 101:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+ 102:Core/Src/main.c **** main_setup();
+ 103:Core/Src/main.c ****   /* USER CODE END 2 */
+ 104:Core/Src/main.c **** 
+ 105:Core/Src/main.c ****   /* Infinite loop */
+ 106:Core/Src/main.c ****   /* USER CODE BEGIN WHILE */
+ 107:Core/Src/main.c ****   while (1)
+ 108:Core/Src/main.c ****   {
+ 109:Core/Src/main.c ****     /* USER CODE END WHILE */
+ 110:Core/Src/main.c **** 
+ 111:Core/Src/main.c ****     /* USER CODE BEGIN 3 */
+ 112:Core/Src/main.c ****     main_loop();
+ 113:Core/Src/main.c ****   }
+ 114:Core/Src/main.c ****   /* USER CODE END 3 */
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 5
+
+
+ 115:Core/Src/main.c **** }
+ 116:Core/Src/main.c **** 
+ 117:Core/Src/main.c **** /**
+ 118:Core/Src/main.c ****   * @brief System Clock Configuration
+ 119:Core/Src/main.c ****   * @retval None
+ 120:Core/Src/main.c ****   */
+ 121:Core/Src/main.c **** void SystemClock_Config(void)
+ 122:Core/Src/main.c **** {
+ 123:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+ 124:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 125:Core/Src/main.c **** 
+ 126:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 127:Core/Src/main.c ****   * in the RCC_OscInitTypeDef structure.
+ 128:Core/Src/main.c ****   */
+ 129:Core/Src/main.c ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+ 130:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+ 131:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+ 132:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 133:Core/Src/main.c ****   {
+ 134:Core/Src/main.c ****     Error_Handler();
+ 135:Core/Src/main.c ****   }
+ 136:Core/Src/main.c **** 
+ 137:Core/Src/main.c ****   /** Initializes the CPU, AHB and APB buses clocks
+ 138:Core/Src/main.c ****   */
+ 139:Core/Src/main.c ****   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+ 140:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 141:Core/Src/main.c ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
+ 142:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 143:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 144:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 145:Core/Src/main.c **** 
+ 146:Core/Src/main.c ****   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+ 147:Core/Src/main.c ****   {
+ 148:Core/Src/main.c ****     Error_Handler();
+ 149:Core/Src/main.c ****   }
+ 150:Core/Src/main.c **** }
+ 151:Core/Src/main.c **** // void SystemClock_Config(void)
+ 152:Core/Src/main.c **** // {
+ 153:Core/Src/main.c **** //   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+ 154:Core/Src/main.c **** //   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 155:Core/Src/main.c **** 
+ 156:Core/Src/main.c **** //   /** Initializes the RCC Oscillators **/
+ 157:Core/Src/main.c **** //   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+ 158:Core/Src/main.c **** //   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+ 159:Core/Src/main.c **** //   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+ 160:Core/Src/main.c **** //   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 161:Core/Src/main.c **** //   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 162:Core/Src/main.c **** //   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9; // 8 MHz * 9 = 72 MHz
+ 163:Core/Src/main.c **** //   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 164:Core/Src/main.c **** //   {
+ 165:Core/Src/main.c **** //     Error_Handler();
+ 166:Core/Src/main.c **** //   }
+ 167:Core/Src/main.c **** 
+ 168:Core/Src/main.c **** //   /** Initializes the CPU, AHB and APB clocks **/
+ 169:Core/Src/main.c **** //   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK |
+ 170:Core/Src/main.c **** //                                 RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+ 171:Core/Src/main.c **** //   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 6
+
+
+ 172:Core/Src/main.c **** //   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;     // HCLK = 72 MHz
+ 173:Core/Src/main.c **** //   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;      // PCLK1 = 36 MHz (max 36)
+ 174:Core/Src/main.c **** //   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;      // PCLK2 = 72 MHz
+ 175:Core/Src/main.c **** 
+ 176:Core/Src/main.c **** //   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+ 177:Core/Src/main.c **** //   {
+ 178:Core/Src/main.c **** //     Error_Handler();
+ 179:Core/Src/main.c **** //   }
+ 180:Core/Src/main.c **** // }
+ 181:Core/Src/main.c **** 
+ 182:Core/Src/main.c **** 
+ 183:Core/Src/main.c **** /* USER CODE BEGIN 4 */
+ 184:Core/Src/main.c **** void main_setup (void)
+ 185:Core/Src/main.c **** {
+  92              		.loc 1 185 1 is_stmt 1 view -0
+  93              		.cfi_startproc
+  94              		@ args = 0, pretend = 0, frame = 0
+  95              		@ frame_needed = 0, uses_anonymous_args = 0
+  96 0000 08B5     		push	{r3, lr}
+  97              		.cfi_def_cfa_offset 8
+  98              		.cfi_offset 3, -8
+  99              		.cfi_offset 14, -4
+ 186:Core/Src/main.c ****   printf("Namaste!\n");
+ 100              		.loc 1 186 3 view .LVU9
+ 101 0002 1C48     		ldr	r0, .L16
+ 102 0004 FFF7FEFF 		bl	puts
+ 103              	.LVL5:
+ 187:Core/Src/main.c ****   if (!ina219_init(&battery) || !ina219_init(&system))
+ 104              		.loc 1 187 3 view .LVU10
+ 105              		.loc 1 187 8 is_stmt 0 view .LVU11
+ 106 0008 1B48     		ldr	r0, .L16+4
+ 107 000a FFF7FEFF 		bl	ina219_init
+ 108              	.LVL6:
+ 109              		.loc 1 187 6 discriminator 1 view .LVU12
+ 110 000e 18B1     		cbz	r0, .L6
+ 111              		.loc 1 187 34 discriminator 1 view .LVU13
+ 112 0010 1A48     		ldr	r0, .L16+8
+ 113 0012 FFF7FEFF 		bl	ina219_init
+ 114              	.LVL7:
+ 115              		.loc 1 187 30 discriminator 1 view .LVU14
+ 116 0016 18B9     		cbnz	r0, .L7
+ 117              	.L6:
+ 188:Core/Src/main.c ****   {
+ 189:Core/Src/main.c ****     printf("INA219 init failed!\n");
+ 118              		.loc 1 189 5 is_stmt 1 view .LVU15
+ 119 0018 1948     		ldr	r0, .L16+12
+ 120 001a FFF7FEFF 		bl	puts
+ 121              	.LVL8:
+ 122              	.L8:
+ 190:Core/Src/main.c ****     while(1);
+ 123              		.loc 1 190 5 view .LVU16
+ 124              		.loc 1 190 10 view .LVU17
+ 125 001e FEE7     		b	.L8
+ 126              	.L7:
+ 191:Core/Src/main.c ****   }
+ 192:Core/Src/main.c ****   else
+ 193:Core/Src/main.c ****   {
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 7
+
+
+ 194:Core/Src/main.c ****     printf("INA219 init successful!\n");
+ 127              		.loc 1 194 5 view .LVU18
+ 128 0020 1848     		ldr	r0, .L16+16
+ 129 0022 FFF7FEFF 		bl	puts
+ 130              	.LVL9:
+ 195:Core/Src/main.c ****   }
+ 196:Core/Src/main.c ****   const float max_current = 2.5;
+ 131              		.loc 1 196 3 view .LVU19
+ 197:Core/Src/main.c ****   const float r_shunt = 0.1;
+ 132              		.loc 1 197 3 view .LVU20
+ 198:Core/Src/main.c ****   if (!ina219_calibrate(&battery, max_current, r_shunt) || !ina219_calibrate(&system, max_current, 
+ 133              		.loc 1 198 3 view .LVU21
+ 134              		.loc 1 198 8 is_stmt 0 view .LVU22
+ 135 0026 184A     		ldr	r2, .L16+20
+ 136 0028 1849     		ldr	r1, .L16+24
+ 137 002a 1348     		ldr	r0, .L16+4
+ 138 002c FFF7FEFF 		bl	ina219_calibrate
+ 139              	.LVL10:
+ 140              		.loc 1 198 6 discriminator 1 view .LVU23
+ 141 0030 28B1     		cbz	r0, .L9
+ 142              		.loc 1 198 61 discriminator 1 view .LVU24
+ 143 0032 154A     		ldr	r2, .L16+20
+ 144 0034 1549     		ldr	r1, .L16+24
+ 145 0036 1148     		ldr	r0, .L16+8
+ 146 0038 FFF7FEFF 		bl	ina219_calibrate
+ 147              	.LVL11:
+ 148              		.loc 1 198 57 discriminator 1 view .LVU25
+ 149 003c 18B9     		cbnz	r0, .L10
+ 150              	.L9:
+ 199:Core/Src/main.c ****   {
+ 200:Core/Src/main.c ****     printf("INA219 calibration failed!\n");
+ 151              		.loc 1 200 5 is_stmt 1 view .LVU26
+ 152 003e 1448     		ldr	r0, .L16+28
+ 153 0040 FFF7FEFF 		bl	puts
+ 154              	.LVL12:
+ 155              	.L11:
+ 201:Core/Src/main.c ****     while(1);
+ 156              		.loc 1 201 5 view .LVU27
+ 157              		.loc 1 201 10 view .LVU28
+ 158 0044 FEE7     		b	.L11
+ 159              	.L10:
+ 202:Core/Src/main.c ****   }
+ 203:Core/Src/main.c ****   else
+ 204:Core/Src/main.c ****   {
+ 205:Core/Src/main.c ****     printf("INA219 calibration successful!\n");
+ 160              		.loc 1 205 5 view .LVU29
+ 161 0046 1348     		ldr	r0, .L16+32
+ 162 0048 FFF7FEFF 		bl	puts
+ 163              	.LVL13:
+ 206:Core/Src/main.c ****   }
+ 207:Core/Src/main.c **** 
+ 208:Core/Src/main.c ****   const uint16_t config_val = 0x199F;
+ 164              		.loc 1 208 3 view .LVU30
+ 209:Core/Src/main.c **** 
+ 210:Core/Src/main.c ****   if (!ina219_configure(&battery, config_val) || !ina219_configure(&system, config_val))
+ 165              		.loc 1 210 3 view .LVU31
+ 166              		.loc 1 210 8 is_stmt 0 view .LVU32
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 8
+
+
+ 167 004c 41F69F11 		movw	r1, #6559
+ 168 0050 0948     		ldr	r0, .L16+4
+ 169 0052 FFF7FEFF 		bl	ina219_configure
+ 170              	.LVL14:
+ 171              		.loc 1 210 6 discriminator 1 view .LVU33
+ 172 0056 28B1     		cbz	r0, .L12
+ 173              		.loc 1 210 51 discriminator 1 view .LVU34
+ 174 0058 41F69F11 		movw	r1, #6559
+ 175 005c 0748     		ldr	r0, .L16+8
+ 176 005e FFF7FEFF 		bl	ina219_configure
+ 177              	.LVL15:
+ 178              		.loc 1 210 47 discriminator 1 view .LVU35
+ 179 0062 18B9     		cbnz	r0, .L13
+ 180              	.L12:
+ 211:Core/Src/main.c ****   {
+ 212:Core/Src/main.c ****     printf("INA219 configuration failed!\n");
+ 181              		.loc 1 212 5 is_stmt 1 view .LVU36
+ 182 0064 0C48     		ldr	r0, .L16+36
+ 183 0066 FFF7FEFF 		bl	puts
+ 184              	.LVL16:
+ 185              	.L14:
+ 213:Core/Src/main.c ****     while(1);
+ 186              		.loc 1 213 5 view .LVU37
+ 187              		.loc 1 213 10 view .LVU38
+ 188 006a FEE7     		b	.L14
+ 189              	.L13:
+ 214:Core/Src/main.c ****   }
+ 215:Core/Src/main.c ****   else
+ 216:Core/Src/main.c ****   {
+ 217:Core/Src/main.c ****     printf("INA219 configuration successful!\n");
+ 190              		.loc 1 217 5 view .LVU39
+ 191 006c 0B48     		ldr	r0, .L16+40
+ 192 006e FFF7FEFF 		bl	puts
+ 193              	.LVL17:
+ 218:Core/Src/main.c ****   }
+ 219:Core/Src/main.c **** }
+ 194              		.loc 1 219 1 is_stmt 0 view .LVU40
+ 195 0072 08BD     		pop	{r3, pc}
+ 196              	.L17:
+ 197              		.align	2
+ 198              	.L16:
+ 199 0074 00000000 		.word	.LC0
+ 200 0078 00000000 		.word	battery
+ 201 007c 00000000 		.word	system
+ 202 0080 0C000000 		.word	.LC1
+ 203 0084 20000000 		.word	.LC2
+ 204 0088 CDCCCC3D 		.word	1036831949
+ 205 008c 00002040 		.word	1075838976
+ 206 0090 38000000 		.word	.LC3
+ 207 0094 54000000 		.word	.LC4
+ 208 0098 74000000 		.word	.LC5
+ 209 009c 94000000 		.word	.LC6
+ 210              		.cfi_endproc
+ 211              	.LFE71:
+ 213              		.section	.rodata.main_loop.str1.4,"aMS",%progbits,1
+ 214              		.align	2
+ 215              	.LC7:
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 9
+
+
+ 216 0000 42617474 		.ascii	"Battery Sensor Error!\000"
+ 216      65727920 
+ 216      53656E73 
+ 216      6F722045 
+ 216      72726F72 
+ 217 0016 0000     		.align	2
+ 218              	.LC8:
+ 219 0018 53797374 		.ascii	"System Sensor Error!\000"
+ 219      656D2053 
+ 219      656E736F 
+ 219      72204572 
+ 219      726F7221 
+ 220 002d 000000   		.align	2
+ 221              	.LC9:
+ 222 0030 42415454 		.ascii	"BATTERY SENSOR\000"
+ 222      45525920 
+ 222      53454E53 
+ 222      4F5200
+ 223 003f 00       		.align	2
+ 224              	.LC10:
+ 225 0040 42617474 		.ascii	"Battery Bus Voltage: %d mV\012\000"
+ 225      65727920 
+ 225      42757320 
+ 225      566F6C74 
+ 225      6167653A 
+ 226              		.align	2
+ 227              	.LC11:
+ 228 005c 42617474 		.ascii	"Battery Shunt Voltage: %d mV\012\000"
+ 228      65727920 
+ 228      5368756E 
+ 228      7420566F 
+ 228      6C746167 
+ 229 007a 0000     		.align	2
+ 230              	.LC12:
+ 231 007c 42617474 		.ascii	"Battery Current: %d mA\012\000"
+ 231      65727920 
+ 231      43757272 
+ 231      656E743A 
+ 231      20256420 
+ 232              		.align	2
+ 233              	.LC13:
+ 234 0094 42617474 		.ascii	"Battery Power: %d W\012\012\000"
+ 234      65727920 
+ 234      506F7765 
+ 234      723A2025 
+ 234      6420570A 
+ 235 00aa 0000     		.align	2
+ 236              	.LC14:
+ 237 00ac 53595354 		.ascii	"SYSTEM SENSOR\000"
+ 237      454D2053 
+ 237      454E534F 
+ 237      5200
+ 238 00ba 0000     		.align	2
+ 239              	.LC15:
+ 240 00bc 53797374 		.ascii	"System Bus Voltage: %d mV\012\000"
+ 240      656D2042 
+ 240      75732056 
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 10
+
+
+ 240      6F6C7461 
+ 240      67653A20 
+ 241 00d7 00       		.align	2
+ 242              	.LC16:
+ 243 00d8 53797374 		.ascii	"System Shunt Voltage: %d mV\012\000"
+ 243      656D2053 
+ 243      68756E74 
+ 243      20566F6C 
+ 243      74616765 
+ 244 00f5 000000   		.align	2
+ 245              	.LC17:
+ 246 00f8 53797374 		.ascii	"System Current: %d mA\012\000"
+ 246      656D2043 
+ 246      75727265 
+ 246      6E743A20 
+ 246      2564206D 
+ 247 010f 00       		.align	2
+ 248              	.LC18:
+ 249 0110 53797374 		.ascii	"System Power: %d W\012\012\000"
+ 249      656D2050 
+ 249      6F776572 
+ 249      3A202564 
+ 249      20570A0A 
+ 250              		.section	.text.main_loop,"ax",%progbits
+ 251              		.align	1
+ 252              		.global	main_loop
+ 253              		.syntax unified
+ 254              		.thumb
+ 255              		.thumb_func
+ 257              	main_loop:
+ 258              	.LFB72:
+ 220:Core/Src/main.c **** 
+ 221:Core/Src/main.c **** void main_loop (void)
+ 222:Core/Src/main.c **** {
+ 259              		.loc 1 222 1 is_stmt 1 view -0
+ 260              		.cfi_startproc
+ 261              		@ args = 0, pretend = 0, frame = 0
+ 262              		@ frame_needed = 0, uses_anonymous_args = 0
+ 263 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 264              		.cfi_def_cfa_offset 40
+ 265              		.cfi_offset 3, -40
+ 266              		.cfi_offset 4, -36
+ 267              		.cfi_offset 5, -32
+ 268              		.cfi_offset 6, -28
+ 269              		.cfi_offset 7, -24
+ 270              		.cfi_offset 8, -20
+ 271              		.cfi_offset 9, -16
+ 272              		.cfi_offset 10, -12
+ 273              		.cfi_offset 11, -8
+ 274              		.cfi_offset 14, -4
+ 223:Core/Src/main.c ****   if (!ina219_get_status(&battery))
+ 275              		.loc 1 223 3 view .LVU42
+ 276              		.loc 1 223 8 is_stmt 0 view .LVU43
+ 277 0004 4448     		ldr	r0, .L24
+ 278 0006 FFF7FEFF 		bl	ina219_get_status
+ 279              	.LVL18:
+ 280              		.loc 1 223 6 discriminator 1 view .LVU44
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 11
+
+
+ 281 000a 18B9     		cbnz	r0, .L19
+ 224:Core/Src/main.c ****   {
+ 225:Core/Src/main.c ****     printf("Battery Sensor Error!\n");
+ 282              		.loc 1 225 5 is_stmt 1 view .LVU45
+ 283 000c 4348     		ldr	r0, .L24+4
+ 284 000e FFF7FEFF 		bl	puts
+ 285              	.LVL19:
+ 286              	.L20:
+ 226:Core/Src/main.c ****     while(1);
+ 287              		.loc 1 226 5 view .LVU46
+ 288              		.loc 1 226 10 view .LVU47
+ 289 0012 FEE7     		b	.L20
+ 290              	.L19:
+ 227:Core/Src/main.c ****   }
+ 228:Core/Src/main.c **** 
+ 229:Core/Src/main.c ****   float bus_voltage_bat = ina219_get_bus_voltage(&battery);
+ 291              		.loc 1 229 3 view .LVU48
+ 292              		.loc 1 229 27 is_stmt 0 view .LVU49
+ 293 0014 404C     		ldr	r4, .L24
+ 294 0016 2046     		mov	r0, r4
+ 295 0018 FFF7FEFF 		bl	ina219_get_bus_voltage
+ 296              	.LVL20:
+ 297 001c 0746     		mov	r7, r0
+ 298              	.LVL21:
+ 230:Core/Src/main.c ****   float shunt_voltage_bat = ina219_get_shunt_voltage(&battery);
+ 299              		.loc 1 230 3 is_stmt 1 view .LVU50
+ 300              		.loc 1 230 29 is_stmt 0 view .LVU51
+ 301 001e 2046     		mov	r0, r4
+ 302              	.LVL22:
+ 303              		.loc 1 230 29 view .LVU52
+ 304 0020 FFF7FEFF 		bl	ina219_get_shunt_voltage
+ 305              	.LVL23:
+ 306 0024 0646     		mov	r6, r0
+ 307              	.LVL24:
+ 231:Core/Src/main.c ****   float current_bat = ina219_get_current(&battery);
+ 308              		.loc 1 231 3 is_stmt 1 view .LVU53
+ 309              		.loc 1 231 23 is_stmt 0 view .LVU54
+ 310 0026 2046     		mov	r0, r4
+ 311              	.LVL25:
+ 312              		.loc 1 231 23 view .LVU55
+ 313 0028 FFF7FEFF 		bl	ina219_get_current
+ 314              	.LVL26:
+ 315 002c 0546     		mov	r5, r0
+ 316              	.LVL27:
+ 232:Core/Src/main.c ****   float power_bat = ina219_get_power(&battery);
+ 317              		.loc 1 232 3 is_stmt 1 view .LVU56
+ 318              		.loc 1 232 21 is_stmt 0 view .LVU57
+ 319 002e 2046     		mov	r0, r4
+ 320              	.LVL28:
+ 321              		.loc 1 232 21 view .LVU58
+ 322 0030 FFF7FEFF 		bl	ina219_get_power
+ 323              	.LVL29:
+ 324 0034 0446     		mov	r4, r0
+ 325              	.LVL30:
+ 233:Core/Src/main.c **** 
+ 234:Core/Src/main.c ****   if (!ina219_get_status(&system))
+ 326              		.loc 1 234 3 is_stmt 1 view .LVU59
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 12
+
+
+ 327              		.loc 1 234 8 is_stmt 0 view .LVU60
+ 328 0036 3A48     		ldr	r0, .L24+8
+ 329              	.LVL31:
+ 330              		.loc 1 234 8 view .LVU61
+ 331 0038 FFF7FEFF 		bl	ina219_get_status
+ 332              	.LVL32:
+ 333              		.loc 1 234 6 discriminator 1 view .LVU62
+ 334 003c 18B9     		cbnz	r0, .L21
+ 235:Core/Src/main.c ****   {
+ 236:Core/Src/main.c ****     printf("System Sensor Error!\n");
+ 335              		.loc 1 236 5 is_stmt 1 view .LVU63
+ 336 003e 3948     		ldr	r0, .L24+12
+ 337 0040 FFF7FEFF 		bl	puts
+ 338              	.LVL33:
+ 339              	.L22:
+ 237:Core/Src/main.c ****     while(1);
+ 340              		.loc 1 237 5 view .LVU64
+ 341              		.loc 1 237 10 view .LVU65
+ 342 0044 FEE7     		b	.L22
+ 343              	.L21:
+ 238:Core/Src/main.c ****   }
+ 239:Core/Src/main.c **** 
+ 240:Core/Src/main.c ****   float bus_voltage_sys = ina219_get_bus_voltage(&system);
+ 344              		.loc 1 240 3 view .LVU66
+ 345              		.loc 1 240 27 is_stmt 0 view .LVU67
+ 346 0046 DFF8D880 		ldr	r8, .L24+8
+ 347 004a 4046     		mov	r0, r8
+ 348 004c FFF7FEFF 		bl	ina219_get_bus_voltage
+ 349              	.LVL34:
+ 350 0050 8346     		mov	fp, r0
+ 351              	.LVL35:
+ 241:Core/Src/main.c ****   float shunt_voltage_sys = ina219_get_shunt_voltage(&system);
+ 352              		.loc 1 241 3 is_stmt 1 view .LVU68
+ 353              		.loc 1 241 29 is_stmt 0 view .LVU69
+ 354 0052 4046     		mov	r0, r8
+ 355              	.LVL36:
+ 356              		.loc 1 241 29 view .LVU70
+ 357 0054 FFF7FEFF 		bl	ina219_get_shunt_voltage
+ 358              	.LVL37:
+ 359 0058 8246     		mov	r10, r0
+ 360              	.LVL38:
+ 242:Core/Src/main.c ****   float current_sys = ina219_get_current(&system);
+ 361              		.loc 1 242 3 is_stmt 1 view .LVU71
+ 362              		.loc 1 242 23 is_stmt 0 view .LVU72
+ 363 005a 4046     		mov	r0, r8
+ 364              	.LVL39:
+ 365              		.loc 1 242 23 view .LVU73
+ 366 005c FFF7FEFF 		bl	ina219_get_current
+ 367              	.LVL40:
+ 368 0060 8146     		mov	r9, r0
+ 369              	.LVL41:
+ 243:Core/Src/main.c ****   float power_sys = ina219_get_power(&system);
+ 370              		.loc 1 243 3 is_stmt 1 view .LVU74
+ 371              		.loc 1 243 21 is_stmt 0 view .LVU75
+ 372 0062 4046     		mov	r0, r8
+ 373              	.LVL42:
+ 374              		.loc 1 243 21 view .LVU76
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 13
+
+
+ 375 0064 FFF7FEFF 		bl	ina219_get_power
+ 376              	.LVL43:
+ 377 0068 8046     		mov	r8, r0
+ 378              	.LVL44:
+ 244:Core/Src/main.c **** 
+ 245:Core/Src/main.c **** 
+ 246:Core/Src/main.c ****   printf("BATTERY SENSOR\n");
+ 379              		.loc 1 246 3 is_stmt 1 view .LVU77
+ 380 006a 2F48     		ldr	r0, .L24+16
+ 381              	.LVL45:
+ 382              		.loc 1 246 3 is_stmt 0 view .LVU78
+ 383 006c FFF7FEFF 		bl	puts
+ 384              	.LVL46:
+ 247:Core/Src/main.c ****   printf("Battery Bus Voltage: %d mV\n", (int)(bus_voltage_bat*1000));
+ 385              		.loc 1 247 3 is_stmt 1 view .LVU79
+ 386              		.loc 1 247 63 is_stmt 0 view .LVU80
+ 387 0070 2E49     		ldr	r1, .L24+20
+ 388 0072 3846     		mov	r0, r7
+ 389 0074 FFF7FEFF 		bl	__aeabi_fmul
+ 390              	.LVL47:
+ 391              		.loc 1 247 3 view .LVU81
+ 392 0078 FFF7FEFF 		bl	__aeabi_f2iz
+ 393              	.LVL48:
+ 394 007c 0146     		mov	r1, r0
+ 395 007e 2C48     		ldr	r0, .L24+24
+ 396 0080 FFF7FEFF 		bl	printf
+ 397              	.LVL49:
+ 248:Core/Src/main.c ****   printf("Battery Shunt Voltage: %d mV\n", (int)(shunt_voltage_bat*1000));
+ 398              		.loc 1 248 3 is_stmt 1 view .LVU82
+ 399              		.loc 1 248 67 is_stmt 0 view .LVU83
+ 400 0084 2949     		ldr	r1, .L24+20
+ 401 0086 3046     		mov	r0, r6
+ 402 0088 FFF7FEFF 		bl	__aeabi_fmul
+ 403              	.LVL50:
+ 404              		.loc 1 248 3 view .LVU84
+ 405 008c FFF7FEFF 		bl	__aeabi_f2iz
+ 406              	.LVL51:
+ 407 0090 0146     		mov	r1, r0
+ 408 0092 2848     		ldr	r0, .L24+28
+ 409 0094 FFF7FEFF 		bl	printf
+ 410              	.LVL52:
+ 249:Core/Src/main.c ****   printf("Battery Current: %d mA\n", (int)(current_bat*1000));
+ 411              		.loc 1 249 3 is_stmt 1 view .LVU85
+ 412              		.loc 1 249 55 is_stmt 0 view .LVU86
+ 413 0098 2449     		ldr	r1, .L24+20
+ 414 009a 2846     		mov	r0, r5
+ 415 009c FFF7FEFF 		bl	__aeabi_fmul
+ 416              	.LVL53:
+ 417              		.loc 1 249 3 view .LVU87
+ 418 00a0 FFF7FEFF 		bl	__aeabi_f2iz
+ 419              	.LVL54:
+ 420 00a4 0146     		mov	r1, r0
+ 421 00a6 2448     		ldr	r0, .L24+32
+ 422 00a8 FFF7FEFF 		bl	printf
+ 423              	.LVL55:
+ 250:Core/Src/main.c ****   printf("Battery Power: %d W\n\n", (int)(power_bat));
+ 424              		.loc 1 250 3 is_stmt 1 view .LVU88
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 14
+
+
+ 425 00ac 2046     		mov	r0, r4
+ 426 00ae FFF7FEFF 		bl	__aeabi_f2iz
+ 427              	.LVL56:
+ 428 00b2 0146     		mov	r1, r0
+ 429 00b4 2148     		ldr	r0, .L24+36
+ 430 00b6 FFF7FEFF 		bl	printf
+ 431              	.LVL57:
+ 251:Core/Src/main.c **** 
+ 252:Core/Src/main.c ****   
+ 253:Core/Src/main.c ****   printf("SYSTEM SENSOR\n");
+ 432              		.loc 1 253 3 view .LVU89
+ 433 00ba 2148     		ldr	r0, .L24+40
+ 434 00bc FFF7FEFF 		bl	puts
+ 435              	.LVL58:
+ 254:Core/Src/main.c ****   printf("System Bus Voltage: %d mV\n", (int)(bus_voltage_sys*1000));
+ 436              		.loc 1 254 3 view .LVU90
+ 437              		.loc 1 254 62 is_stmt 0 view .LVU91
+ 438 00c0 1A49     		ldr	r1, .L24+20
+ 439 00c2 5846     		mov	r0, fp
+ 440 00c4 FFF7FEFF 		bl	__aeabi_fmul
+ 441              	.LVL59:
+ 442              		.loc 1 254 3 view .LVU92
+ 443 00c8 FFF7FEFF 		bl	__aeabi_f2iz
+ 444              	.LVL60:
+ 445 00cc 0146     		mov	r1, r0
+ 446 00ce 1D48     		ldr	r0, .L24+44
+ 447 00d0 FFF7FEFF 		bl	printf
+ 448              	.LVL61:
+ 255:Core/Src/main.c ****   printf("System Shunt Voltage: %d mV\n", (int)(shunt_voltage_sys*1000));
+ 449              		.loc 1 255 3 is_stmt 1 view .LVU93
+ 450              		.loc 1 255 66 is_stmt 0 view .LVU94
+ 451 00d4 1549     		ldr	r1, .L24+20
+ 452 00d6 5046     		mov	r0, r10
+ 453 00d8 FFF7FEFF 		bl	__aeabi_fmul
+ 454              	.LVL62:
+ 455              		.loc 1 255 3 view .LVU95
+ 456 00dc FFF7FEFF 		bl	__aeabi_f2iz
+ 457              	.LVL63:
+ 458 00e0 0146     		mov	r1, r0
+ 459 00e2 1948     		ldr	r0, .L24+48
+ 460 00e4 FFF7FEFF 		bl	printf
+ 461              	.LVL64:
+ 256:Core/Src/main.c ****   printf("System Current: %d mA\n", (int)(current_sys*1000));
+ 462              		.loc 1 256 3 is_stmt 1 view .LVU96
+ 463              		.loc 1 256 54 is_stmt 0 view .LVU97
+ 464 00e8 1049     		ldr	r1, .L24+20
+ 465 00ea 4846     		mov	r0, r9
+ 466 00ec FFF7FEFF 		bl	__aeabi_fmul
+ 467              	.LVL65:
+ 468              		.loc 1 256 3 view .LVU98
+ 469 00f0 FFF7FEFF 		bl	__aeabi_f2iz
+ 470              	.LVL66:
+ 471 00f4 0146     		mov	r1, r0
+ 472 00f6 1548     		ldr	r0, .L24+52
+ 473 00f8 FFF7FEFF 		bl	printf
+ 474              	.LVL67:
+ 257:Core/Src/main.c ****   printf("System Power: %d W\n\n", (int)(power_sys));
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 15
+
+
+ 475              		.loc 1 257 3 is_stmt 1 view .LVU99
+ 476 00fc 4046     		mov	r0, r8
+ 477 00fe FFF7FEFF 		bl	__aeabi_f2iz
+ 478              	.LVL68:
+ 479 0102 0146     		mov	r1, r0
+ 480 0104 1248     		ldr	r0, .L24+56
+ 481 0106 FFF7FEFF 		bl	printf
+ 482              	.LVL69:
+ 258:Core/Src/main.c **** 
+ 259:Core/Src/main.c ****   HAL_Delay(1000); // Delay for readability
+ 483              		.loc 1 259 3 view .LVU100
+ 484 010a 4FF47A70 		mov	r0, #1000
+ 485 010e FFF7FEFF 		bl	HAL_Delay
+ 486              	.LVL70:
+ 260:Core/Src/main.c **** }
+ 487              		.loc 1 260 1 is_stmt 0 view .LVU101
+ 488 0112 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 489              	.LVL71:
+ 490              	.L25:
+ 491              		.loc 1 260 1 view .LVU102
+ 492 0116 00BF     		.align	2
+ 493              	.L24:
+ 494 0118 00000000 		.word	battery
+ 495 011c 00000000 		.word	.LC7
+ 496 0120 00000000 		.word	system
+ 497 0124 18000000 		.word	.LC8
+ 498 0128 30000000 		.word	.LC9
+ 499 012c 00007A44 		.word	1148846080
+ 500 0130 40000000 		.word	.LC10
+ 501 0134 5C000000 		.word	.LC11
+ 502 0138 7C000000 		.word	.LC12
+ 503 013c 94000000 		.word	.LC13
+ 504 0140 AC000000 		.word	.LC14
+ 505 0144 BC000000 		.word	.LC15
+ 506 0148 D8000000 		.word	.LC16
+ 507 014c F8000000 		.word	.LC17
+ 508 0150 10010000 		.word	.LC18
+ 509              		.cfi_endproc
+ 510              	.LFE72:
+ 512              		.section	.text.Error_Handler,"ax",%progbits
+ 513              		.align	1
+ 514              		.global	Error_Handler
+ 515              		.syntax unified
+ 516              		.thumb
+ 517              		.thumb_func
+ 519              	Error_Handler:
+ 520              	.LFB73:
+ 261:Core/Src/main.c **** 
+ 262:Core/Src/main.c **** /* USER CODE END 4 */
+ 263:Core/Src/main.c **** 
+ 264:Core/Src/main.c **** /**
+ 265:Core/Src/main.c ****   * @brief  This function is executed in case of error occurrence.
+ 266:Core/Src/main.c ****   * @retval None
+ 267:Core/Src/main.c ****   */
+ 268:Core/Src/main.c **** void Error_Handler(void)
+ 269:Core/Src/main.c **** {
+ 521              		.loc 1 269 1 is_stmt 1 view -0
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 16
+
+
+ 522              		.cfi_startproc
+ 523              		@ Volatile: function does not return.
+ 524              		@ args = 0, pretend = 0, frame = 0
+ 525              		@ frame_needed = 0, uses_anonymous_args = 0
+ 526              		@ link register save eliminated.
+ 270:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 271:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
+ 272:Core/Src/main.c ****   __disable_irq();
+ 527              		.loc 1 272 3 view .LVU104
+ 528              	.LBB4:
+ 529              	.LBI4:
+ 530              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
+   1:Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
+   2:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @version  V5.0.4
+   5:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @date     09. April 2018
+   6:Drivers/CMSIS/Include/cmsis_gcc.h ****  ******************************************************************************/
+   7:Drivers/CMSIS/Include/cmsis_gcc.h **** /*
+   8:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+   9:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  10:Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  12:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:Drivers/CMSIS/Include/cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:Drivers/CMSIS/Include/cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  16:Drivers/CMSIS/Include/cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  18:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:Drivers/CMSIS/Include/cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:Drivers/CMSIS/Include/cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:Drivers/CMSIS/Include/cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:Drivers/CMSIS/Include/cmsis_gcc.h ****  * limitations under the License.
+  23:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+  24:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  25:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  28:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  34:Drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
+  36:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  38:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  39:Drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
+  41:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  43:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
+  44:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __INLINE                               inline
+  45:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 17
+
+
+  46:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  49:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE                 
+  50:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif                                           
+  52:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  55:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __USED
+  56:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  58:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __WEAK
+  59:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  61:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED
+  62:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  64:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  67:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  70:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:Drivers/CMSIS/Include/cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  78:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  86:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  94:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 102:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 18
+
+
+ 103:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 110:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 113:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 116:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 117:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 118:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ###########################  Core Function Access  ########################### */
+ 119:Drivers/CMSIS/Include/cmsis_gcc.h **** /** \ingroup  CMSIS_Core_FunctionInterface
+ 120:Drivers/CMSIS/Include/cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
+ 121:Drivers/CMSIS/Include/cmsis_gcc.h ****   @{
+ 122:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 123:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 124:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 125:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
+ 126:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
+ 127:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 128:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 129:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __enable_irq(void)
+ 130:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 131:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsie i" : : : "memory");
+ 132:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 133:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 134:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 135:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 136:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
+ 137:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+ 138:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 139:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 140:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
+ 531              		.loc 2 140 27 view .LVU105
+ 532              	.LBB5:
+ 141:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 142:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
+ 533              		.loc 2 142 3 view .LVU106
+ 534              		.syntax unified
+ 535              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 536 0000 72B6     		cpsid i
+ 537              	@ 0 "" 2
+ 538              		.thumb
+ 539              		.syntax unified
+ 540              	.L27:
+ 541              	.LBE5:
+ 542              	.LBE4:
+ 273:Core/Src/main.c ****   while (1)
+ 543              		.loc 1 273 3 view .LVU107
+ 274:Core/Src/main.c ****   {
+ 275:Core/Src/main.c ****   }
+ 544              		.loc 1 275 3 view .LVU108
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 19
+
+
+ 273:Core/Src/main.c ****   while (1)
+ 545              		.loc 1 273 9 view .LVU109
+ 546 0002 FEE7     		b	.L27
+ 547              		.cfi_endproc
+ 548              	.LFE73:
+ 550              		.section	.text.SystemClock_Config,"ax",%progbits
+ 551              		.align	1
+ 552              		.global	SystemClock_Config
+ 553              		.syntax unified
+ 554              		.thumb
+ 555              		.thumb_func
+ 557              	SystemClock_Config:
+ 558              	.LFB70:
+ 122:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+ 559              		.loc 1 122 1 view -0
+ 560              		.cfi_startproc
+ 561              		@ args = 0, pretend = 0, frame = 64
+ 562              		@ frame_needed = 0, uses_anonymous_args = 0
+ 563 0000 10B5     		push	{r4, lr}
+ 564              		.cfi_def_cfa_offset 8
+ 565              		.cfi_offset 4, -8
+ 566              		.cfi_offset 14, -4
+ 567 0002 90B0     		sub	sp, sp, #64
+ 568              		.cfi_def_cfa_offset 72
+ 123:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 569              		.loc 1 123 3 view .LVU111
+ 123:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 570              		.loc 1 123 22 is_stmt 0 view .LVU112
+ 571 0004 06AC     		add	r4, sp, #24
+ 572 0006 2822     		movs	r2, #40
+ 573 0008 0021     		movs	r1, #0
+ 574 000a 2046     		mov	r0, r4
+ 575 000c FFF7FEFF 		bl	memset
+ 576              	.LVL72:
+ 124:Core/Src/main.c **** 
+ 577              		.loc 1 124 3 is_stmt 1 view .LVU113
+ 124:Core/Src/main.c **** 
+ 578              		.loc 1 124 22 is_stmt 0 view .LVU114
+ 579 0010 0023     		movs	r3, #0
+ 580 0012 0193     		str	r3, [sp, #4]
+ 581 0014 0293     		str	r3, [sp, #8]
+ 582 0016 0393     		str	r3, [sp, #12]
+ 583 0018 0493     		str	r3, [sp, #16]
+ 584 001a 0593     		str	r3, [sp, #20]
+ 129:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+ 585              		.loc 1 129 3 is_stmt 1 view .LVU115
+ 129:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+ 586              		.loc 1 129 36 is_stmt 0 view .LVU116
+ 587 001c 0123     		movs	r3, #1
+ 588 001e 0693     		str	r3, [sp, #24]
+ 130:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+ 589              		.loc 1 130 3 is_stmt 1 view .LVU117
+ 130:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+ 590              		.loc 1 130 30 is_stmt 0 view .LVU118
+ 591 0020 4FF48033 		mov	r3, #65536
+ 592 0024 0793     		str	r3, [sp, #28]
+ 131:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 20
+
+
+ 593              		.loc 1 131 3 is_stmt 1 view .LVU119
+ 132:Core/Src/main.c ****   {
+ 594              		.loc 1 132 3 view .LVU120
+ 132:Core/Src/main.c ****   {
+ 595              		.loc 1 132 7 is_stmt 0 view .LVU121
+ 596 0026 2046     		mov	r0, r4
+ 597 0028 FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 598              	.LVL73:
+ 132:Core/Src/main.c ****   {
+ 599              		.loc 1 132 6 discriminator 1 view .LVU122
+ 600 002c 68B9     		cbnz	r0, .L32
+ 139:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 601              		.loc 1 139 3 is_stmt 1 view .LVU123
+ 139:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 602              		.loc 1 139 31 is_stmt 0 view .LVU124
+ 603 002e 0F23     		movs	r3, #15
+ 604 0030 0193     		str	r3, [sp, #4]
+ 141:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 605              		.loc 1 141 3 is_stmt 1 view .LVU125
+ 141:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 606              		.loc 1 141 34 is_stmt 0 view .LVU126
+ 607 0032 0123     		movs	r3, #1
+ 608 0034 0293     		str	r3, [sp, #8]
+ 142:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 609              		.loc 1 142 3 is_stmt 1 view .LVU127
+ 142:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 610              		.loc 1 142 35 is_stmt 0 view .LVU128
+ 611 0036 0021     		movs	r1, #0
+ 612 0038 0391     		str	r1, [sp, #12]
+ 143:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 613              		.loc 1 143 3 is_stmt 1 view .LVU129
+ 143:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 614              		.loc 1 143 36 is_stmt 0 view .LVU130
+ 615 003a 0491     		str	r1, [sp, #16]
+ 144:Core/Src/main.c **** 
+ 616              		.loc 1 144 3 is_stmt 1 view .LVU131
+ 144:Core/Src/main.c **** 
+ 617              		.loc 1 144 36 is_stmt 0 view .LVU132
+ 618 003c 0591     		str	r1, [sp, #20]
+ 146:Core/Src/main.c ****   {
+ 619              		.loc 1 146 3 is_stmt 1 view .LVU133
+ 146:Core/Src/main.c ****   {
+ 620              		.loc 1 146 7 is_stmt 0 view .LVU134
+ 621 003e 01A8     		add	r0, sp, #4
+ 622 0040 FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 623              	.LVL74:
+ 146:Core/Src/main.c ****   {
+ 624              		.loc 1 146 6 discriminator 1 view .LVU135
+ 625 0044 18B9     		cbnz	r0, .L33
+ 150:Core/Src/main.c **** // void SystemClock_Config(void)
+ 626              		.loc 1 150 1 view .LVU136
+ 627 0046 10B0     		add	sp, sp, #64
+ 628              		.cfi_remember_state
+ 629              		.cfi_def_cfa_offset 8
+ 630              		@ sp needed
+ 631 0048 10BD     		pop	{r4, pc}
+ 632              	.L32:
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 21
+
+
+ 633              		.cfi_restore_state
+ 134:Core/Src/main.c ****   }
+ 634              		.loc 1 134 5 is_stmt 1 view .LVU137
+ 635 004a FFF7FEFF 		bl	Error_Handler
+ 636              	.LVL75:
+ 637              	.L33:
+ 148:Core/Src/main.c ****   }
+ 638              		.loc 1 148 5 view .LVU138
+ 639 004e FFF7FEFF 		bl	Error_Handler
+ 640              	.LVL76:
+ 641              		.cfi_endproc
+ 642              	.LFE70:
+ 644              		.section	.text.main,"ax",%progbits
+ 645              		.align	1
+ 646              		.global	main
+ 647              		.syntax unified
+ 648              		.thumb
+ 649              		.thumb_func
+ 651              	main:
+ 652              	.LFB69:
+  74:Core/Src/main.c **** 
+ 653              		.loc 1 74 1 view -0
+ 654              		.cfi_startproc
+ 655              		@ Volatile: function does not return.
+ 656              		@ args = 0, pretend = 0, frame = 0
+ 657              		@ frame_needed = 0, uses_anonymous_args = 0
+ 658 0000 08B5     		push	{r3, lr}
+ 659              		.cfi_def_cfa_offset 8
+ 660              		.cfi_offset 3, -8
+ 661              		.cfi_offset 14, -4
+  83:Core/Src/main.c **** 
+ 662              		.loc 1 83 3 view .LVU140
+ 663 0002 FFF7FEFF 		bl	HAL_Init
+ 664              	.LVL77:
+  90:Core/Src/main.c **** 
+ 665              		.loc 1 90 3 view .LVU141
+ 666 0006 FFF7FEFF 		bl	SystemClock_Config
+ 667              	.LVL78:
+  97:Core/Src/main.c ****   // MX_I2C2_Init();
+ 668              		.loc 1 97 3 view .LVU142
+ 669 000a FFF7FEFF 		bl	MX_GPIO_Init
+ 670              	.LVL79:
+  99:Core/Src/main.c ****   MX_USART1_UART_Init();
+ 671              		.loc 1 99 3 view .LVU143
+ 672 000e FFF7FEFF 		bl	MX_I2C1_Init
+ 673              	.LVL80:
+ 100:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+ 674              		.loc 1 100 3 view .LVU144
+ 675 0012 FFF7FEFF 		bl	MX_USART1_UART_Init
+ 676              	.LVL81:
+ 102:Core/Src/main.c ****   /* USER CODE END 2 */
+ 677              		.loc 1 102 1 view .LVU145
+ 678 0016 FFF7FEFF 		bl	main_setup
+ 679              	.LVL82:
+ 680              	.L35:
+ 107:Core/Src/main.c ****   {
+ 681              		.loc 1 107 3 view .LVU146
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 22
+
+
+ 112:Core/Src/main.c ****   }
+ 682              		.loc 1 112 5 discriminator 1 view .LVU147
+ 683 001a FFF7FEFF 		bl	main_loop
+ 684              	.LVL83:
+ 107:Core/Src/main.c ****   {
+ 685              		.loc 1 107 9 view .LVU148
+ 686 001e FCE7     		b	.L35
+ 687              		.cfi_endproc
+ 688              	.LFE69:
+ 690              		.global	system
+ 691              		.section	.data.system,"aw"
+ 692              		.align	2
+ 695              	system:
+ 696 0000 41       		.byte	65
+ 697 0001 00000000 		.space	11
+ 697      00000000 
+ 697      000000
+ 698              		.global	battery
+ 699              		.section	.data.battery,"aw"
+ 700              		.align	2
+ 703              	battery:
+ 704 0000 40       		.byte	64
+ 705 0001 00000000 		.space	11
+ 705      00000000 
+ 705      000000
+ 706              		.text
+ 707              	.Letext0:
+ 708              		.file 3 "C:/Users/aavas/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+ 709              		.file 4 "C:/Users/aavas/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+ 710              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 711              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 712              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h"
+ 713              		.file 8 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h"
+ 714              		.file 9 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 715              		.file 10 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
+ 716              		.file 11 "Core/Inc/ina219.h"
+ 717              		.file 12 "Core/Inc/usart.h"
+ 718              		.file 13 "C:/Users/aavas/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-t
+ 719              		.file 14 "Core/Inc/i2c.h"
+ 720              		.file 15 "Core/Inc/gpio.h"
+ 721              		.file 16 "<built-in>"
+ 722              		.file 17 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ARM GAS  C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s 			page 23
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:19     .text._write:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:25     .text._write:00000000 _write
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:57     .text._write:00000014 $d
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:62     .rodata.main_setup.str1.4:00000000 $d
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:84     .text.main_setup:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:90     .text.main_setup:00000000 main_setup
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:199    .text.main_setup:00000074 $d
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:703    .data.battery:00000000 battery
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:695    .data.system:00000000 system
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:214    .rodata.main_loop.str1.4:00000000 $d
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:251    .text.main_loop:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:257    .text.main_loop:00000000 main_loop
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:494    .text.main_loop:00000118 $d
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:513    .text.Error_Handler:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:519    .text.Error_Handler:00000000 Error_Handler
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:551    .text.SystemClock_Config:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:557    .text.SystemClock_Config:00000000 SystemClock_Config
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:645    .text.main:00000000 $t
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:651    .text.main:00000000 main
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:692    .data.system:00000000 $d
+C:\Users\aavas\AppData\Local\Temp\ccCKex7c.s:700    .data.battery:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_UART_Transmit
+huart1
+puts
+ina219_init
+ina219_calibrate
+ina219_configure
+ina219_get_status
+ina219_get_bus_voltage
+ina219_get_shunt_voltage
+ina219_get_current
+ina219_get_power
+__aeabi_fmul
+__aeabi_f2iz
+printf
+HAL_Delay
+memset
+HAL_RCC_OscConfig
+HAL_RCC_ClockConfig
+HAL_Init
+MX_GPIO_Init
+MX_I2C1_Init
+MX_USART1_UART_Init
