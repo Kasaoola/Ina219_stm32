@@ -41,5 +41,4 @@ Ensure the INA219s have different I2C addresses (default 0x40, can set second to
 - **`ina219.c/h`**: Driver code to initialize, configure, and read from the INA219 sensors.
 - Data is printed to the serial terminal every second for both sensors.
 
-## 🧪 Output Example (via UART)
 
